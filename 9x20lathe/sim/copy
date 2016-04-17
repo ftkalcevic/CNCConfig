@@ -1,0 +1,7 @@
+cp lathe-pendant.hal ..
+cp lathe-pendant.hid ..
+cp LCD_BUF.py ..
+cp menupage.py ..
+cp pendant-menu.py ..
+cp pendant_wizard.py ..
+cp LCD.py ..

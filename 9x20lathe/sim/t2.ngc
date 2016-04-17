@@ -1,0 +1,35 @@
+o<1> sub 
+    G30.1
+    G0 x12z-10
+    G1 x0 F100
+    G0 x10
+    G0 x12
+    G30
+o<1> endsub
+
+o<2> sub 
+    G96 D1200 S2
+    G30.1
+
+    G0 x12z-10
+    G0 x10
+    G33 X0 K.5
+    G4 P.5
+    G0 x12
+
+    G97
+
+    G30
+o<2> endsub
+
+(g61.1)
+
+S100
+M3
+
+G0 x20z0
+o<1> call
+o<2> call
+
+M2
+

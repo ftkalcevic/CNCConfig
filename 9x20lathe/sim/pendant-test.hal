@@ -1,0 +1,12 @@
+# components
+loadrt threads name1=test-thread period1=1000000 
+loadusr -Wn hidcomp  /home/frankt/src/hid/hidcomp/debug/hidcomp -d pendant.halhid  -ini /home/frankt/emc2/config/sim/lathe.ini
+
+# pin aliases
+# param aliases
+# signals
+# nets
+# parameter values
+setp hidcomp.0.LCD.page-select 2
+
+# realtime thread/function links

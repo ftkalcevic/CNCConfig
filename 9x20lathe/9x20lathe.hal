@@ -1,0 +1,399 @@
+# #######################################
+#
+# HAL file for 9x20 lathe
+#
+# Servos on X, Z and Spindle
+#
+# Derived from 2.3 hm2-servo.hal
+#
+# #####################################################################
+
+
+# ###################################
+# Core EMC/HAL Loads
+# ###################################
+
+# kinematics
+loadrt trivkins
+
+# motion controller, get name and thread periods from ini file
+loadrt [EMCMOT]EMCMOT base_period_nsec=[EMCMOT]BASE_PERIOD servo_period_nsec=[EMCMOT]SERVO_PERIOD num_joints=[TRAJ]AXES
+
+# standard components
+loadrt pid num_chan=3 
+
+# hostmot2 driver
+loadrt hostmot2 debug_idrom=1 debug_module_descriptors=1 debug_pin_descriptors=1 debug_modules=1
+
+# load low-level driver
+loadrt [HOSTMOT2](DRIVER) config=[HOSTMOT2](CONFIG)
+
+setp hm2_[HOSTMOT2](BOARD).0.pwmgen.pwm_frequency 40000
+
+setp hm2_[HOSTMOT2](BOARD).0.watchdog.timeout_ns 10000000
+
+# rsh
+loadusr linuxcncrsh
+
+# ################################################
+# THREADS
+# ################################################
+
+addf hm2_[HOSTMOT2](BOARD).0.read          servo-thread
+
+addf motion-command-handler                servo-thread
+addf motion-controller                     servo-thread
+
+addf pid.0.do-pid-calcs                    servo-thread
+addf pid.1.do-pid-calcs                    servo-thread
+addf pid.2.do-pid-calcs                    servo-thread
+
+
+# ######################################################
+# Axis-of-motion Specific Configs (not the GUI)
+# ######################################################
+
+
+# ################
+# X [0] Axis
+# ################
+
+# axis enable chain
+newsig emcmot.00.enable bit
+sets emcmot.00.enable FALSE
+net emcmot.00.enable => pid.0.enable
+net emcmot.00.enable => hm2_[HOSTMOT2](BOARD).0.pwmgen.00.enable
+net emcmot.00.enable <= axis.0.amp-enable-out 
+
+# encoder feedback
+setp hm2_[HOSTMOT2](BOARD).0.encoder.00.counter-mode 0
+setp hm2_[HOSTMOT2](BOARD).0.encoder.00.filter 1
+setp hm2_[HOSTMOT2](BOARD).0.encoder.00.index-invert 0
+setp hm2_[HOSTMOT2](BOARD).0.encoder.00.index-mask 0
+setp hm2_[HOSTMOT2](BOARD).0.encoder.00.index-mask-invert 0
+
+setp  hm2_[HOSTMOT2](BOARD).0.encoder.00.scale  [AXIS_0]INPUT_SCALE
+net motor.00.pos-fb hm2_[HOSTMOT2](BOARD).0.encoder.00.position => pid.0.feedback
+net motor.00.pos-fb => axis.0.motor-pos-fb 
+
+# set PID loop gains from inifile
+setp pid.0.Pgain [AXIS_0]P
+setp pid.0.Igain [AXIS_0]I
+setp pid.0.Dgain [AXIS_0]D
+setp pid.0.bias [AXIS_0]BIAS
+setp pid.0.FF0 [AXIS_0]FF0
+setp pid.0.FF1 [AXIS_0]FF1
+setp pid.0.FF2 [AXIS_0]FF2
+setp pid.0.deadband [AXIS_0]DEADBAND
+setp pid.0.maxoutput [AXIS_0]MAX_VELOCITY
+
+# position command signals
+setp hm2_[HOSTMOT2](BOARD).0.pwmgen.00.output-type 1 #pwm on pin1, dir on pin2
+setp hm2_[HOSTMOT2](BOARD).0.pwmgen.00.scale  [AXIS_0]OUTPUT_SCALE
+
+net emcmot.00.pos-cmd axis.0.motor-pos-cmd => pid.0.command
+net motor.00.command  pid.0.output  =>  hm2_[HOSTMOT2](BOARD).0.pwmgen.00.value
+
+# ################
+# Spindle [1] Axis
+# Note, axis requires 0-X,1-Y,2-Z, so we map hm2_ devices 2 to 1
+# ################
+
+# spindle enable chain
+loadrt near
+addf near.0 servo-thread
+setp near.0.difference 1
+setp near.0.in1 0
+
+loadrt not
+addf not.0 servo-thread
+net near_not near.0.out => not.0.in
+
+loadrt or2 count=3
+addf or2.0 servo-thread
+net spindle_on motion.spindle-on => or2.0.in0
+net near_on not.0.out => or2.0.in1
+net and_on or2.0.out => pid.1.enable hm2_[HOSTMOT2](BOARD).0.pwmgen.02.enable
+
+# encoder feedback
+setp hm2_[HOSTMOT2](BOARD).0.encoder.02.counter-mode 0
+setp hm2_[HOSTMOT2](BOARD).0.encoder.02.filter 1
+setp hm2_[HOSTMOT2](BOARD).0.encoder.02.index-invert 0
+setp hm2_[HOSTMOT2](BOARD).0.encoder.02.index-mask 0
+setp hm2_[HOSTMOT2](BOARD).0.encoder.02.index-mask-invert 0
+setp hm2_[HOSTMOT2](BOARD).0.encoder.02.scale  [SPINDLE]INPUT_SCALE
+
+
+# set PID loop gains from inifile
+setp pid.1.Pgain [SPINDLE]P
+setp pid.1.Igain [SPINDLE]I
+setp pid.1.Dgain [SPINDLE]D
+setp pid.1.bias [SPINDLE]BIAS
+setp pid.1.FF0 [SPINDLE]FF0
+setp pid.1.FF1 [SPINDLE]FF1
+setp pid.1.FF2 [SPINDLE]FF2
+setp pid.1.deadband [SPINDLE]DEADBAND
+setp pid.1.maxoutput [SPINDLE]MAX_OUTPUT
+
+setp hm2_[HOSTMOT2](BOARD).0.pwmgen.02.output-type 1 #pwm on pin1, dir on pin2
+setp hm2_[HOSTMOT2](BOARD).0.pwmgen.02.scale  [SPINDLE]OUTPUT_SCALE
+
+
+# velocity command signals
+loadrt limit3
+addf limit3.0 servo-thread
+setp limit3.0.min -1500
+setp limit3.0.max 1500
+setp limit3.0.maxv 500
+setp limit3.0.maxa 1000
+
+net spindle_rpm_cmd motion.spindle-speed-out => limit3.0.in
+net spindle_limit_rpm limit3.0.out => pid.1.command
+net spindle_limit_rpm  => near.0.in2
+
+loadrt enc_idx_div
+addf enc-idx-div.0 servo-thread
+setp enc-idx-div.0.trigger-count 10000
+setp enc-idx-div.0.counts-per-rev 12000
+
+net motor_speed_cmd pid.1.output => hm2_[HOSTMOT2](BOARD).0.pwmgen.02.value
+net spindle_enc_count hm2_[HOSTMOT2](BOARD).0.encoder.02.count => enc-idx-div.0.encoder-count-in
+net spindle_index_en hm2_[HOSTMOT2](BOARD).0.encoder.02.index-enable  enc-idx-div.0.encoder-index-enable
+net spindle_div_idx_en enc-idx-div.0.index-enable  motion.spindle-index-enable
+
+
+loadrt scale
+addf scale.0 servo-thread
+setp scale.0.gain 60
+loadrt lowpass
+addf lowpass.0 servo-thread
+setp lowpass.0.gain 0.01
+net motor.01.vel-fb-hz hm2_[HOSTMOT2](BOARD).0.encoder.02.velocity => scale.0.in
+net motor.01.vel-fb-rpm scale.0.out => lowpass.0.in
+net spindle-rpm-filtered lowpass.0.out => pid.1.feedback
+net spindle-rpm-filtered lowpass.0.out => motion.spindle-speed-in
+#net motor.01.vel-fb-rpm => pid.1.feedback
+#net motor.01.vel-fb-rpm => motion.spindle-speed-in
+
+net motor.01.pos-fb hm2_[HOSTMOT2](BOARD).0.encoder.02.position motion.spindle-revs
+
+
+# ################
+# Z [2] Axis, is hm2_ device 1
+# ################
+
+# axis enable chain
+newsig emcmot.02.enable bit
+sets emcmot.02.enable FALSE
+net emcmot.02.enable => pid.2.enable
+net emcmot.02.enable => hm2_[HOSTMOT2](BOARD).0.pwmgen.01.enable
+net emcmot.02.enable <= axis.2.amp-enable-out 
+
+# encoder feedback
+setp hm2_[HOSTMOT2](BOARD).0.encoder.01.counter-mode 0
+setp hm2_[HOSTMOT2](BOARD).0.encoder.01.filter 1
+setp hm2_[HOSTMOT2](BOARD).0.encoder.01.index-invert 0
+setp hm2_[HOSTMOT2](BOARD).0.encoder.01.index-mask 0
+setp hm2_[HOSTMOT2](BOARD).0.encoder.01.index-mask-invert 0
+
+setp  hm2_[HOSTMOT2](BOARD).0.encoder.01.scale  [AXIS_2]INPUT_SCALE
+net motor.02.pos-fb hm2_[HOSTMOT2](BOARD).0.encoder.01.position => pid.2.feedback
+net motor.02.pos-fb => axis.2.motor-pos-fb #push copy back to Axis GUI
+
+# set PID loop gains from inifile
+setp pid.2.Pgain [AXIS_2]P
+setp pid.2.Igain [AXIS_2]I
+setp pid.2.Dgain [AXIS_2]D
+setp pid.2.bias [AXIS_2]BIAS
+setp pid.2.FF0 [AXIS_2]FF0
+setp pid.2.FF1 [AXIS_2]FF1
+setp pid.2.FF2 [AXIS_2]FF2
+setp pid.2.deadband [AXIS_2]DEADBAND
+setp pid.2.maxoutput [AXIS_2]MAX_VELOCITY
+
+# position command signals
+setp hm2_[HOSTMOT2](BOARD).0.pwmgen.01.output-type 1 #pwm on pin1, dir on pin2
+setp hm2_[HOSTMOT2](BOARD).0.pwmgen.01.scale  [AXIS_2]OUTPUT_SCALE
+
+net emcmot.02.pos-cmd axis.2.motor-pos-cmd => pid.2.command
+net motor.02.command  pid.2.output  =>  hm2_[HOSTMOT2](BOARD).0.pwmgen.01.value
+
+
+# ##################################################
+# Standard I/O Block - EStop, Etc
+# ##################################################
+
+# create a signal for the estop loopback
+loadrt logic names=estop-and personality=0x105
+addf estop-and servo-thread
+
+setp estop-and.in-00 1
+setp estop-and.in-01 1
+setp estop-and.in-02 1
+setp estop-and.in-03 1
+setp estop-and.in-04 1
+
+net estop-link estop-and.and => iocontrol.0.emc-enable-in
+net estop-source1 iocontrol.0.user-enable-out => estop-and.in-00
+
+
+# create signals for tool loading loopback
+#net tool-prep-loop iocontrol.0.tool-prepare => iocontrol.0.tool-prepared
+#net tool-change-loop iocontrol.0.tool-change => iocontrol.0.tool-changed
+
+# X Home switch
+setp hm2_[HOSTMOT2](BOARD).0.gpio.024.is_output 0
+net x_home_switch hm2_[HOSTMOT2](BOARD).0.gpio.024.in => axis.0.home-sw-in
+net x_home_index_enable <= axis.0.index-enable 
+net x_home_index_enable => hm2_[HOSTMOT2](BOARD).0.encoder.00.index-enable
+net x_home_index_enable => pid.0.index-enable
+
+
+# ##################################################
+# Spindle
+# ##################################################
+
+
+addf hm2_[HOSTMOT2](BOARD).0.write         servo-thread
+       
+# ##################################################
+# Probe
+# ##################################################
+
+setp hm2_[HOSTMOT2](BOARD).0.gpio.026.is_output 0
+net probe_in hm2_[HOSTMOT2](BOARD).0.gpio.026.in_not => motion.probe-input
+#net motor.02.pos-fb => axis.2.motor-pos-probed
+       
+
+
+## ##################################################
+## Pendant
+## ##################################################
+#
+#
+#loadusr -Wn hidcomp /home/frankt/emc2/config/hidcomp /home/frankt/emc2/config/pendant.halhid 
+#loadrt mux count=1
+#
+#addf mux.0 servo-thread
+#
+## step multiplier
+#loadrt conv_s32_u32
+#addf conv-s32-u32.0 servo-thread
+#net umul_select hidcomp.0.MultiplierSelect.raw conv-s32-u32.0.in
+#net step_mul2 conv-s32-u32.0.out mux.0.sel
+#newsig multiplier_select float
+#net multiplier_select mux.0.out
+#setp mux.0.in0 -0.00025
+#setp mux.0.in1 -0.0025
+#setp mux.0.in2 -0.025
+#setp mux.0.in3 -0.25
+#
+##axis select
+#loadrt select8 count=1
+#addf select8.0 servo-thread
+#
+#setp select8.0.enable true
+#net axis_select hidcomp.0.AxisSelect.raw select8.0.sel
+#
+##dial
+#newsig jog-wheel-count s32
+#net jog-wheel-count hidcomp.0.JogWheel.count
+#
+##jog z
+#addf or2.1 servo-thread
+#
+#net velmode_key hidcomp.0.VelMode.in or2.1.in0
+#net pulsemode_key hidcomp.0.PulseMode.in or2.1.in1
+#
+#loadrt and2 count=3
+#addf and2.1 servo-thread
+#
+#net jog_en or2.1.out and2.1.in0
+#net zjog_en select8.0.out2 and2.1.in1
+#
+#net zjen and2.1.out axis.2.jog-enable
+#net velmode_key axis.2.jog-vel-mode
+#net jog-wheel-count axis.2.jog-counts
+#net multiplier_select axis.2.jog-scale
+#
+##jog x
+#addf and2.2 servo-thread
+#net jog_en and2.2.in0
+#net xjog_en select8.0.out0 and2.2.in1
+#
+#net xjen and2.2.out axis.0.jog-enable
+#net velmode_key axis.0.jog-vel-mode
+#net jog-wheel-count axis.0.jog-counts
+#net multiplier_select axis.0.jog-scale
+#
+## power
+#net pendant_reset  hidcomp.0.Reset.in halui.machine.off
+#net pendant_reset2 hidcomp.0.Reset.in-not halui.machine.on
+#
+## program run
+#net pendant_run halui.program.run halui.mode.auto hidcomp.0.Run.in
+## program run led
+#net pendant_run_led halui.program.is-running hidcomp.0.RunLED.out
+## program stop
+#net pendant_stop halui.program.stop hidcomp.0.Stop.in
+## program single step
+#net pendant_step halui.program.step hidcomp.0.StepMode.in
+## tool change led
+##net tool-change iocontrol.0.tool-change => hidcomp.0.ChangeToolLED.out
+##net tool-changed iocontrol.0.tool-changed <= hidcomp.0.ToolRetract.in
+#
+#loadusr -W hal_manualtoolchange
+#net tool-change iocontrol.0.tool-change => hal_manualtoolchange.change hidcomp.0.ChangeToolLED.out
+#net tool-changed iocontrol.0.tool-changed <= hal_manualtoolchange.changed
+#net tool-number iocontrol.0.tool-prep-number => hal_manualtoolchange.number
+#net tool-prepare-loopback iocontrol.0.tool-prepare => iocontrol.0.tool-prepared
+#
+## Z zero
+#net z0 halui.mdi-command-00 hidcomp.0.Z0.in
+## X zero
+#net x0 halui.mdi-command-01 hidcomp.0.X0.in
+## spindle speed
+## feed rate override
+## joystick jog x, z
+#
+#
+## X/Z joystick jogging
+#loadrt encoder num_chan=3
+#loadrt sim_encoder num_chan=3
+#
+#net velX hidcomp.0.X.fvalue => sim-encoder.0.speed
+#net velZ hidcomp.0.Z.fvalue => sim-encoder.2.speed
+#
+#net XA sim-encoder.0.phase-A => encoder.0.phase-A
+#net XB sim-encoder.0.phase-B => encoder.0.phase-B
+#net ZA sim-encoder.2.phase-A => encoder.2.phase-A
+#net ZB sim-encoder.2.phase-B => encoder.2.phase-B
+#
+##net countX encoder.0.counts => axis.0.jog-counts
+##net countZ encoder.2.counts => axis.2.jog-counts
+#
+#setp encoder.0.position-scale           1
+#setp encoder.0.x4-mode         		TRUE
+#setp encoder.2.position-scale           1
+#setp encoder.2.x4-mode        		TRUE
+#setp encoder.capture-position.tmax      0
+#setp encoder.update-counters.tmax       0
+#setp sim-encoder.0.ppr     		00000064
+#setp sim-encoder.0.scale            	1
+#setp sim-encoder.2.ppr     		00000064
+#setp sim-encoder.2.scale            	1
+#setp sim-encoder.make-pulses.tmax       0
+#setp sim-encoder.update-speed.tmax      0
+#
+##setp axis.0.jog-enable TRUE
+##setp axis.2.jog-enable TRUE
+#
+#addf encoder.capture-position servo-thread
+#addf sim-encoder.update-speed servo-thread
+##addf encoder.update-counters base-thread
+##addf sim-encoder.make-pulses base-thread
+#
+##
+
+loadusr emcrsh
+

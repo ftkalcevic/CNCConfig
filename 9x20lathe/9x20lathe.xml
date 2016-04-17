@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<pyvcp>
+ <vbox>
+    <label><text>"Spindle speed:"</text></label>
+    <!--<number><width>10</width><format>" 5.0f"</format><halpin>"spindle-speed"</halpin></number>-->
+    <bar><halpin>"spindle-speed"</halpin><max_>1500</max_></bar>
+ </vbox>
+ <vbox>
+    <checkbutton>
+    	<halpin>"watchdog-reset"</halpin>
+    	<text>"Watchdog Reset"</text>
+    </checkbutton>
+ </vbox>
+</pyvcp>

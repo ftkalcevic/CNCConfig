@@ -1,0 +1,4 @@
+net spindle-rpm-filtered => pyvcp.spindle-speed
+net watchdog-reset-button <= pyvcp.watchdog-reset
+#source pendant.hal
+

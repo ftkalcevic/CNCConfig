@@ -1,0 +1,3 @@
+net spindle-rpm-filtered => pyvcp.spindle-speed
+#source pendant.hal
+

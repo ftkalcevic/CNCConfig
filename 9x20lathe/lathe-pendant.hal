@@ -1,0 +1,181 @@
+#loadusr -Wn pendant-menu /home/frankt/emc2/config/pendant-menu.py -ini /home/frankt/emc2/config/9x20lathe.ini
+loadusr -Wn hidcomp  /usr/bin/hidcomp -ini /home/frankt/emc2/config/9x20lathe.ini /home/frankt/emc2/config/lathe-pendant.hid
+#loadusr hidcomp -ini /home/frankt/emc2/config/9x20lathe.ini /home/frankt/emc2/config/lathe-pendant.hid
+
+# hook pendant pins up to the menu
+
+net axis-select hidcomp.0.Axis-Select.raw #=> pendant-menu.axis-select
+net multiplier-select hidcomp.0.Multiplier-Select.raw #=> pendant-menu.multiplier-select
+#net menu1 hidcomp.0.Menu1.in => pendant-menu.menu1
+#net menu2 hidcomp.0.Menu2.in => pendant-menu.menu2
+#net menu3 hidcomp.0.Menu3.in => pendant-menu.menu3
+#net menu4 hidcomp.0.Menu4.in => pendant-menu.menu4
+#net enable_either pendant-menu.enable
+net jog-wheel-count hidcomp.0.Jog-Wheel.count
+#net jog-wheel-count => pendant-menu.jog-wheel
+
+# pendant heartbeat
+loadrt watchdog
+setp watchdog.0.initial-timeout 10.0
+setp watchdog.0.timeout 2.0
+net estop-source2 watchdog.0.out => estop-and.in-01
+net hb_pulse hidcomp.0.Heartbeat.raw => watchdog.0.in-s32
+addf watchdog.0 servo-thread
+#net watchdog-reset-button => watchdog.0.reset
+#setp watchdog.0.reset 1
+
+# hook menu to emc functions
+#net spindle-rpm-filtered => pendant-menu.spindle-speed
+
+# hook pendant to emc
+## power
+net pendant_reset  hidcomp.0.E-Stop.in halui.machine.off
+net pendant_reset2 hidcomp.0.E-Stop.in-not halui.machine.on
+
+loadrt and2 count=6
+
+addf and2.5 servo-thread
+addf and2.4 servo-thread
+
+# program run
+# run when stopped
+net pendant_run <= hidcomp.0.Green.in
+net pendant_run => and2.5.in0
+net is_stopped <= halui.program.is-idle
+net is_stopped => and2.5.in1
+net do_run and2.5.out => halui.program.run halui.mode.auto
+
+#step when paused
+net pendant_run => and2.4.in0
+net ispaused <= halui.program.is-paused 
+net ispaused => and2.4.in1
+net do_step and2.4.out => halui.program.step
+
+# program run led
+#net pendant_run_led halui.program.is-running hidcomp.0.Green.out
+net is_running <= halui.program.is-running
+net is_running => hidcomp.0.Red.out
+# program stop
+net pendant_stop halui.program.stop hidcomp.0.Red.in
+# pause
+loadrt toggle2nist
+addf toggle2nist.0 servo-thread
+loadrt toggle
+addf toggle.0 servo-thread
+
+net pendant_pause hidcomp.0.Amber.in => toggle.0.in
+net toggled_pause toggle.0.out => toggle2nist.0.in
+net ispaused => toggle2nist.0.is-on
+net ispaused => hidcomp.0.Amber.out
+net toggle_pause toggle2nist.0.on => halui.program.pause
+net toggle_resume toggle2nist.0.off => halui.program.resume
+
+# action enable buttons
+net enable_pos hidcomp.0.Enable-Left.in
+net enable_vel hidcomp.0.Enable-Right.in
+
+addf or2.2 servo-thread
+net enable_pos or2.2.in0
+net enable_vel or2.2.in1
+net enable_either or2.2.out
+
+
+loadrt mux count=1
+addf mux.0 servo-thread
+
+# step multiplier multiplexer
+loadrt conv_s32_u32
+addf conv-s32-u32.0 servo-thread
+
+net multiplier-select conv-s32-u32.0.in
+net multiplier-select-u32 conv-s32-u32.0.out mux.0.sel
+newsig multiplier-value float
+net multiplier-value mux.0.out
+# the multipliers are xN/4 because the dial counts in quadrature
+setp mux.0.in0 0.00025
+setp mux.0.in1 0.0025
+setp mux.0.in2 0.025
+setp mux.0.in3 0.25
+
+#axis select
+loadrt select8 count=1
+addf select8.0 servo-thread
+
+setp select8.0.enable true
+net axis-select select8.0.sel
+
+net X_selected select8.0.out0
+net Z_selected select8.0.out1
+net Spindle_selected select8.0.out4
+net Feed_selected select8.0.out5
+
+#jog z
+#  jog-wheel-count => axis.2.jog-count
+net jog-wheel-count axis.2.jog-counts
+#  enable_vel => axis.2.jog-vel-mode
+net enable_vel axis.2.jog-vel-mode
+#  mulitiplier_select => axis.2.jog-scale
+net multiplier-value axis.2.jog-scale
+#  enable_either && Z_Select => axis.2.jog-enable
+addf and2.0 servo-thread
+
+net enable_either and2.0.in0
+net Z_selected and2.0.in1
+net Z_jog_enable and2.0.out => axis.2.jog-enable
+
+#jog x
+#  jog-wheel-count => axis.0.jog-count
+net jog-wheel-count axis.0.jog-counts
+#  enable_vel => axis.0.jog-vel-mode
+net enable_vel axis.0.jog-vel-mode
+#  mulitiplier_select => axis.0.jog-scale
+net multiplier-value axis.0.jog-scale
+#  enable_either && X_Select => axis.0.jog-enable
+addf and2.1 servo-thread
+
+net enable_either and2.1.in0
+net X_selected and2.1.in1
+net X_jog_enable and2.1.out => axis.0.jog-enable
+
+
+# feed rate override
+# jog-wheel-count => halui.feed-override-counts
+net jog-wheel-count => halui.feed-override.counts
+# scale is fixed - 1 turn = 100%
+setp halui.feed-override.scale 0.0025
+# enable_either && Feed_Seleceted => halui.feed-override-count-enable
+addf and2.2 servo-thread
+
+net enable_either => and2.2.in0
+net Feed_selected => and2.2.in1
+net FeedOverride_enabled and2.2.out => halui.feed-override.count-enable
+
+# spindle speed/spindle override
+# when in program mode, we change the spindle override.
+#      in manual mode, we set the spindle speed (target speed?)
+#
+# jog-wheel-count => halui.spindle-override-counts
+net jog-wheel-count => halui.spindle-override.counts
+# scale is fixed - 1 turn = 100%
+setp halui.spindle-override.scale 0.0025
+# enable_either && Spindle_Seleceted => halui.spindle-override-count-enable
+addf and2.3 servo-thread
+
+net enable_either => and2.3.in0
+net Spindle_selected => and2.3.in1
+net SpindleOverride_enabled and2.3.out => halui.spindle-override.count-enable
+
+
+
+
+
+# in case they were linked already
+#unlinkp iocontrol.0.tool-change
+#unlinkp iocontrol.0.tool-changed
+#
+
+#net tool-change iocontrol.0.tool-change  => pendant-menu.tool-change
+#net tool-changed pendant-menu.tool-changed => iocontrol.0.tool-changed
+#net tool-prep-number iocontrol.0.tool-prep-number => pendant-menu.tool-prep-number
+net tool-prepare-loopback iocontrol.0.tool-prepare => iocontrol.0.tool-prepared
+

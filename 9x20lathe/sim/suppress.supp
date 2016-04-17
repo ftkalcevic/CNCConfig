@@ -1,0 +1,53 @@
+{
+   <insert a suppression name here>
+   Memcheck:Cond
+   obj:*
+   fun:*
+}
+{
+   <insert a suppression name here>
+   Memcheck:Param
+   ioctl(USBDEVFS_URB).buffer
+   obj:/lib/ld-2.7.so
+   fun:libusb_submit_transfer
+   fun:libusb_control_transfer
+   fun:libusb_get_string_descriptor_ascii
+   fun:_ZN9HIDDevice19GetDescriptorStringEh
+   fun:_ZN9HIDDevice12ManufacturerEv
+   fun:_ZN10HIDDevices16SearchHIDDevicesEbtbtbRK7QStringbS2_bS2_bS2_
+   fun:_ZN6browse8openFileE7QString
+   fun:_ZN6browse18ProcessCommandlineEv
+   fun:main
+}
+{
+   <insert a suppression name here>
+   Memcheck:Param
+   ioctl(USBDEVFS_SUBMITURB)
+   obj:/lib/ld-2.7.so
+   fun:handle_events
+   fun:libusb_handle_events_timeout
+   fun:libusb_handle_events
+   fun:libusb_control_transfer
+   fun:libusb_get_string_descriptor_ascii
+   fun:_ZN9HIDDevice19GetDescriptorStringEh
+   fun:_ZN9HIDDevice12ManufacturerEv
+   fun:_ZN10HIDDevices16SearchHIDDevicesEbtbtbRK7QStringbS2_bS2_bS2_
+   fun:_ZN6browse8openFileE7QString
+   fun:_ZN6browse18ProcessCommandlineEv
+   fun:main
+}
+{
+   <insert a suppression name here>
+   Memcheck:Value4
+   fun:handle_events
+   fun:libusb_handle_events_timeout
+   fun:libusb_handle_events
+   fun:libusb_control_transfer
+   fun:libusb_get_string_descriptor_ascii
+   fun:_ZN9HIDDevice19GetDescriptorStringEh
+   fun:_ZN9HIDDevice12ManufacturerEv
+   fun:_ZN10HIDDevices16SearchHIDDevicesEbtbtbRK7QStringbS2_bS2_bS2_
+   fun:_ZN6browse8openFileE7QString
+   fun:_ZN6browse18ProcessCommandlineEv
+   fun:main
+}

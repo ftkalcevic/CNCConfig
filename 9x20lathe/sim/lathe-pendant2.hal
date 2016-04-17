@@ -1,0 +1,9 @@
+loadusr -Wn hidcomp  /home/frankt/svn/hid/hidcomp/debug/hidcomp -ini /home/frankt/emc2/config/sim/lathe.ini /home/frankt/emc2/config/sim/lathe-pendant.hid
+
+loadusr -W halui -ini /home/frankt/emc2/config/sim/lathe.ini
+
+# hook pendant to emc
+## power
+net pendant_reset  hidcomp.0.E-Stop.in halui.machine.off
+net pendant_reset2 hidcomp.0.E-Stop.in-not halui.machine.on
+

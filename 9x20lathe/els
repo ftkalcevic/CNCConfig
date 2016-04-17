@@ -1,0 +1,5 @@
+cd /home/frankt/emc2/config
+
+. ~/emc2.core/emc2-dev/scripts/emc-environment
+rm /home/frankt/emc2/config/9x20lathe.var
+/home/frankt/emc2.core/emc2-dev/scripts/emc /home/frankt/emc2/config/els.ini

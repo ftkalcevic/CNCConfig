@@ -1,0 +1,9 @@
+#!/bin/bash
+
+cd /home/frankt/linuxcnc/config
+export LINUXCNCPATH=/home/frankt/linuxcnc_src
+
+. $LINUXCNCPATH/scripts/rip-environment
+#rm /home/frankt/emc2/config/9x20lathe.var
+$LINUXCNCPATH/scripts/linuxcnc /home/frankt/linuxcnc/config/9x20lathe.ini
+#emc /home/frankt/emc2/config/9x20lathe.ini

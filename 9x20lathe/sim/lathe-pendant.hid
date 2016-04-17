@@ -1,0 +1,49 @@
+<!DOCTYPE HID>
+<HID>
+ <Device matchVID="7232" matchPID="1241" />
+ <Items>
+  <Item enabled="false" type="5" index="0" usage="1" pin="DFU" usagePage="65280" />
+  <Item enabled="true" type="0" index="1" usage="1" pin="E-Stop" usagePage="9" />
+  <Item enabled="true" type="0" index="2" usage="1" pin="Enable-Left" usagePage="9" />
+  <Item enabled="true" type="0" index="3" usage="1" pin="Enable-Right" usagePage="9" />
+  <Item logicalMinOverride="0" valueType="0" reverse="false" enabled="true" outputType="0" type="1" useResponseCurve="false" index="4" usage="1" outputMin="-1" outputMax="1" pin="Multiplier-Select" usagePage="9" logicalMaxOverride="3" >
+   <controlPoints>
+    <point lP="0" dwLog="0" />
+    <point lP="10000" dwLog="10000" />
+   </controlPoints>
+  </Item>
+  <Item enabled="true" type="0" index="5" usage="1" pin="Menu1" usagePage="9" />
+  <Item enabled="true" type="0" index="6" usage="1" pin="Menu2" usagePage="9" />
+  <Item enabled="true" type="0" index="7" usage="1" pin="Menu3" usagePage="9" />
+  <Item enabled="true" type="0" index="8" usage="1" pin="Menu4" usagePage="9" />
+  <Item logicalMinOverride="0" valueType="0" reverse="false" enabled="true" outputType="0" type="1" useResponseCurve="false" index="9" usage="55" outputMin="-1" outputMax="1" pin="Jog-Wheel" usagePage="1" logicalMaxOverride="255" >
+   <controlPoints>
+    <point lP="0" dwLog="0" />
+    <point lP="10000" dwLog="10000" />
+   </controlPoints>
+  </Item>
+  <Item enabled="true" type="0" index="10" usage="1" pin="Green" usagePage="9" />
+  <Item enabled="true" type="0" index="11" usage="1" pin="Amber" usagePage="9" />
+  <Item enabled="true" type="0" index="12" usage="1" pin="Red" usagePage="9" />
+  <Item logicalMinOverride="0" valueType="0" reverse="false" enabled="true" outputType="0" type="1" useResponseCurve="false" index="13" usage="1" outputMin="-1" outputMax="1" pin="Axis-Select" usagePage="9" logicalMaxOverride="5" >
+   <controlPoints>
+    <point lP="0" dwLog="0" />
+    <point lP="10000" dwLog="10000" />
+   </controlPoints>
+  </Item>
+  <Item logicalMinOverride="0" valueType="0" reverse="false" enabled="true" outputType="0" type="1" useResponseCurve="false" index="14" usage="1" outputMin="-1" outputMax="1" pin="Heartbeat" usagePage="62500" logicalMaxOverride="15" >
+   <controlPoints>
+    <point lP="0" dwLog="0" />
+    <point lP="10000" dwLog="10000" />
+   </controlPoints>
+  </Item>
+  <Item enabled="true" type="3" index="16" usage="1000" pin="Menu-LED-1" usagePage="8" />
+  <Item enabled="true" type="3" index="17" usage="1000" pin="Menu-LED-2" usagePage="8" />
+  <Item enabled="true" type="3" index="18" usage="1000" pin="Menu-LED-3" usagePage="8" />
+  <Item enabled="true" type="3" index="19" usage="1000" pin="Menu-LED-4" usagePage="8" />
+  <Item enabled="true" type="3" index="20" usage="1000" pin="Green" usagePage="8" />
+  <Item enabled="true" type="3" index="21" usage="1000" pin="Amber" usagePage="8" />
+  <Item enabled="true" type="3" index="22" usage="1000" pin="Red" usagePage="8" />
+  <Item enabled="true" type="4" index="1" usage="0" refreshPeriod="100" LCDProcPort="29090" pin="LCD" usagePage="0" />
+ </Items>
+</HID>

@@ -1,0 +1,1 @@
+loadusr -Wn logitech  hidcomp -name logitech -ini /home/frankt/emc2/config/sim/lathe.ini logitech1.hid

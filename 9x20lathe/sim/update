@@ -1,0 +1,8 @@
+#!/bin/sh
+
+cp lathe-pendant.hid ..
+cp LCD_BUF.py ..
+cp LCD.py ..
+cp menupage.py ..
+cp pendant-menu.py ..
+cp pendant_wizard.py ..

@@ -1,0 +1,41 @@
+# Load HIDCOMP
+loadusr -Wn hidcomp  /home/frankt/svn/hid/hidcomp/release/hidcomp -ini /home/frankt/emc2/config/sim/lathe.ini contour.hid
+
+# Load hal ui to interface to hal
+loadusr -W halui -ini /home/frankt/emc2/config/sim/lathe.ini
+
+# The dial is set to jog the Z axis - only jogs when button #14 (left of the dial) is pressed
+
+net z-enable hidcomp.0.Button.14.in => axis.2.jog-enable
+net jog-dial-count hidcomp.0.Dial.count => axis.2.jog-counts
+# one hard coded scale
+setp axis.2.jog-scale .1
+
+# Jog the Y axis using the wheel when button #15 (right of the dial) is pressed
+# Use the dial output as a velocity into sim encoder, then into encode, then encoder output to axis jog counts
+
+net velX hidcomp.0.Wheel.fvalue => sim-encoder.1.speed
+
+net XA sim-encoder.1.phase-A => encoder.1.phase-A
+net XB sim-encoder.1.phase-B => encoder.1.phase-B
+
+net countX encoder.1.counts => axis.0.jog-counts
+
+setp encoder.1.position-scale           1
+setp encoder.1.x4-mode         		TRUE
+setp encoder.capture-position.tmax      0
+setp encoder.update-counters.tmax       0
+setp sim-encoder.1.ppr     		00000064
+setp sim-encoder.1.scale            	1
+setp sim-encoder.make-pulses.tmax       0
+setp sim-encoder.update-speed.tmax      0
+
+net xenable hidcomp.0.Button.15.in => axis.0.jog-enable 
+setp axis.0.jog-scale .01
+
+# set program run to button 1 (top left)
+net pendant_run halui.program.run halui.mode.auto <= hidcomp.0.Button.1.in
+
+# set program stop to button 2 (top second left)
+net pendant_stop halui.program.stop <= hidcomp.0.Button.2.in
+

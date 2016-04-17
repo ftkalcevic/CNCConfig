@@ -1,0 +1,19 @@
+loadusr -W hal_manualtoolchange
+
+# in case they were linked already
+unlinkp iocontrol.0.tool-change
+unlinkp iocontrol.0.tool-changed
+#
+net tool-change hal_manualtoolchange.change iocontrol.0.tool-change 
+net tool-changed hal_manualtoolchange.changed iocontrol.0.tool-changed
+net tool-prep-number hal_manualtoolchange.number iocontrol.0.tool-prep-number
+
+#loadrt iset
+#addf iset.0 servo-thread
+#
+#setp iset.0.value 2
+#net tool-change iocontrol.0.tool-change  => hidcomp.0.ChangeTool.out iset.0.in
+#net tool-changed hidcomp.0.ToolHome.in => iocontrol.0.tool-changed
+#
+#net isetvalue iset.0.out => updown-s.0.set-count
+#net tool-prep-number hal_manualtoolchange.number iocontrol.0.tool-prep-number
