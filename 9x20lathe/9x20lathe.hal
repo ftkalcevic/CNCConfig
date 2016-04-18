@@ -395,5 +395,5 @@ net probe_in hm2_[HOSTMOT2](BOARD).0.gpio.026.in_not => motion.probe-input
 #
 ##
 
-loadusr emcrsh
+loadusr linuxcncrsh
 

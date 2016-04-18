@@ -1,6 +1,7 @@
-#loadusr -Wn pendant-menu /home/frankt/emc2/config/pendant-menu.py -ini /home/frankt/emc2/config/9x20lathe.ini
-loadusr -Wn hidcomp  /usr/bin/hidcomp -ini /home/frankt/emc2/config/9x20lathe.ini /home/frankt/emc2/config/lathe-pendant.hid
-#loadusr hidcomp -ini /home/frankt/emc2/config/9x20lathe.ini /home/frankt/emc2/config/lathe-pendant.hid
+#loadusr -Wn pendant-menu /home/frankt/linuxcnc/9x20lathe/pendant-menu.py -ini /home/frankt/linuxcnc/9x20lathe/9x20lathe.ini
+#loadusr -Wn hidcomp  /usr/bin/hidcomp -ini /home/frankt/linuxcnc/9x20lathe/9x20lathe.ini /home/frankt/linuxcnc/9x20lathe/lathe-pendant.hid
+loadusr -Wn hidcomp  /home/frankt/src/hidcomp/hid/hidcomp/release/hidcomp -ini /home/frankt/linuxcnc/9x20lathe/9x20lathe.ini /home/frankt/linuxcnc/9x20lathe/lathe-pendant.hid
+#loadusr hidcomp -ini /home/frankt/linuxcnc/9x20lathe/9x20lathe.ini /home/frankt/linuxcnc/9x20lathe/lathe-pendant.hid
 
 # hook pendant pins up to the menu
 
@@ -15,14 +16,14 @@ net jog-wheel-count hidcomp.0.Jog-Wheel.count
 #net jog-wheel-count => pendant-menu.jog-wheel
 
 # pendant heartbeat
-loadrt watchdog
-setp watchdog.0.initial-timeout 10.0
-setp watchdog.0.timeout 2.0
-net estop-source2 watchdog.0.out => estop-and.in-01
-net hb_pulse hidcomp.0.Heartbeat.raw => watchdog.0.in-s32
-addf watchdog.0 servo-thread
-#net watchdog-reset-button => watchdog.0.reset
-#setp watchdog.0.reset 1
+loadrt watchdog2
+setp watchdog2.0.initial-timeout 10.0
+setp watchdog2.0.timeout 2.0
+net estop-source2 watchdog2.0.out => estop-and.in-01
+net hb_pulse hidcomp.0.Heartbeat.raw => watchdog2.0.in-s32
+addf watchdog2.0 servo-thread
+#net watchdog2-reset-button => watchdog2.0.reset
+#setp watchdog2.0.reset 1
 
 # hook menu to emc functions
 #net spindle-rpm-filtered => pendant-menu.spindle-speed
