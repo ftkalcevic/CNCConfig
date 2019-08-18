@@ -1,0 +1,4 @@
+#!/bin/bash
+halcmd setp ext.run 0
+exit 0
+

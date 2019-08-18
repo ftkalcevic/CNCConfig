@@ -1,0 +1,43 @@
+o<_camrotate> sub
+
+(#<_CamX4>	Ax)
+(#<_CamY4>	Ay)
+(#<_CamX3>	A'x)
+(#<_CamY3>	A'y)
+(#<_CamX2>	Bx)
+(#<_CamY2>	By)
+(#<_CamX1>	B'x)
+(#<_CamY1>	B'y)
+
+(first find offset between A' and A and store values in 1501 and 1502 	x and y)
+
+#1501 = [#<_CamX4> - #<_CamX3>]
+#1502 = [#<_CamY4> - #<_CamY3>]
+
+(move point B' relative to the offset and save them into #<_CamB-offX> #<_CamB-offY>)
+
+#<_CamB-offX> = [#<_CamX1> + #1501] 
+#<_CamB-offY> = [#<_CamY1> + #1502]
+
+(move points b and b' WRT to A so that A will be at the origin)
+
+#<_CamNewBX> = [#<_CamX2> - #<_CamX4>]
+#<_CamNewBY> = [#<_CamY2> - #<_CamY4>]
+#<_CamNewB-X> = [#<_CamB-offX> - #<_CamX4>]
+#<_CamNewB-Y> = [#<_CamB-offY> - #<_CamY4>]
+
+(find angle between B and B', store it in 1503)
+
+#1503 = [[ATAN[#<_CamNewB-Y>]/[#<_CamNewB-X>]] - [ATAN[#<_CamNewBY>]/[#<_CamNewBX>]]]
+
+(perform actual rotational offset)
+
+G10 L2 P0 r#1503
+
+(DEBUG, Rotated current coordinate system by #1503 Degrees)
+
+#3999 = 0 (clear points to make for new saves)
+
+
+o<_camrotate> endsub
+M2

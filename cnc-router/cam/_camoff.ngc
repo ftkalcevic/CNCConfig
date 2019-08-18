@@ -1,0 +1,11 @@
+o<_camoff> sub
+
+
+
+(move cam for offset)
+
+g91 g0 x-#2113 y-#2114
+g90
+
+o<_camoff> endsub
+M2

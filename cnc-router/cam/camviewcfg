@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<chain>
+    <unit id="input.v4l2:0" width="640" height="480" pixelformat="CAM_PIXEL_FORMAT_YUYV" format_name="640x480 YUV 4:2:2 reverse byte">
+        <control id="input">0</control>
+        <control id="standard">0</control>
+        <control id="brightness">160</control>
+        <control id="contrast">19</control>
+        <control id="saturation">14</control>
+        <control id="hue">0</control>
+        <control id="auto-white-balance">1</control>
+        <control id="gamma">64</control>
+        <control id="control-9963800">1</control>
+        <control id="control-9963802">125</control>
+        <control id="control-9963803">8</control>
+        <control id="control-10094849">0</control>
+    </unit>
+    <unit id="convert.to_rgb8" width="640" height="480" pixelformat="CAM_PIXEL_FORMAT_RGB" format_name="640x480 RGB 24bpp">
+    </unit>
+    <unit id="output.opengl" width="640" height="480" pixelformat="CAM_PIXEL_FORMAT_RGB" format_name="640x480 RGB 24bpp">
+    </unit>
+    <unit id="emc.crosshair" width="640" height="480" pixelformat="CAM_PIXEL_FORMAT_RGB" format_name="640x480 RGB 24bpp">
+        <control id="enable">1</control>
+        <control id="color-r">1</control>
+        <control id="color-g">1</control>
+        <control id="color-b">1</control>
+        <control id="gl-xor">1</control>
+        <control id="circle-radius">100</control>
+        <control id="circle-angle">0</control>
+        <control id="shape">0</control>
+    </unit>
+</chain>

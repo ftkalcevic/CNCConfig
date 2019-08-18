@@ -1,0 +1,437 @@
+# #######################################
+#
+# CNC Router, x, y slaves, z slaves, a
+#
+# ########################################
+
+
+# ###################################
+# Core EMC/HAL Loads
+# ###################################
+
+# kinematics
+loadrt trivkins coordinates=XYZAYZ kinstype=BOTH
+
+# motion controller, get name and thread periods from ini file
+loadrt [EMCMOT]EMCMOT servo_period_nsec=[EMCMOT]SERVO_PERIOD num_joints=[TRAJ]AXES
+
+# standard components
+loadrt pid num_chan=6 
+
+# hostmot2 driver
+loadrt hostmot2
+
+# load low-level driver
+loadrt [HOSTMOT2](DRIVER) config=[HOSTMOT2](CONFIG)
+
+setp hm2_[HOSTMOT2](BOARD).0.pwmgen.pwm_frequency 40000
+
+setp hm2_[HOSTMOT2](BOARD).0.watchdog.timeout_ns 10000000
+
+loadrt limit1
+loadrt and2
+loadrt not
+loadrt debounce cfg=1
+
+
+# vfd driver
+#loadusr -Wn vfd sj200_vfd --device /dev/ttyUSB0 --name vfd --rate 19200 --parity none --verbose --debug
+loadusr -Wn vfd sj200_vfd --device /dev/ttyUSB0 --name vfd --rate 19200 --parity none
+
+# ################################################
+# THREADS
+# ################################################
+
+addf hm2_[HOSTMOT2](BOARD).0.read          servo-thread
+
+addf motion-command-handler                servo-thread
+addf motion-controller                     servo-thread
+
+addf pid.0.do-pid-calcs                    servo-thread
+addf pid.1.do-pid-calcs                    servo-thread
+addf pid.2.do-pid-calcs                    servo-thread
+addf pid.3.do-pid-calcs                    servo-thread
+addf pid.4.do-pid-calcs                    servo-thread
+addf pid.5.do-pid-calcs                    servo-thread
+
+addf limit1.0				   servo-thread
+addf and2.0				   servo-thread
+addf not.0				   servo-thread
+addf debounce.0 servo-thread
+setp debounce.0.delay 10
+
+addf hm2_[HOSTMOT2](BOARD).0.write         servo-thread
+#addf hm2_[HOSTMOT2](BOARD).0.pet_watchdog  servo-thread
+       
+# ######################################################
+# Axis-of-motion Specific Configs (not the GUI)
+# ######################################################
+
+
+# ################
+# X [0] Axis
+# ################
+
+# axis enable chain
+newsig emcmot.00.enable bit
+sets emcmot.00.enable FALSE
+net emcmot.00.enable => pid.0.enable
+net emcmot.00.enable => hm2_[HOSTMOT2](BOARD).0.pwmgen.05.enable
+net emcmot.00.enable <= joint.0.amp-enable-out 
+
+# encoder feedback
+setp hm2_[HOSTMOT2](BOARD).0.encoder.05.counter-mode 0
+setp hm2_[HOSTMOT2](BOARD).0.encoder.05.filter 1
+setp hm2_[HOSTMOT2](BOARD).0.encoder.05.index-invert 0
+setp hm2_[HOSTMOT2](BOARD).0.encoder.05.index-mask 0
+setp hm2_[HOSTMOT2](BOARD).0.encoder.05.index-mask-invert 0
+
+setp  hm2_[HOSTMOT2](BOARD).0.encoder.05.scale  [JOINT_0]INPUT_SCALE
+net motor.00.pos-fb hm2_[HOSTMOT2](BOARD).0.encoder.05.position => pid.0.feedback
+net motor.00.pos-fb => joint.0.motor-pos-fb #push copy back to Axis GUI
+
+# set PID loop gains from inifile
+setp pid.0.Pgain [JOINT_0]P
+setp pid.0.Igain [JOINT_0]I
+setp pid.0.Dgain [JOINT_0]D
+setp pid.0.bias [JOINT_0]BIAS
+setp pid.0.FF0 [JOINT_0]FF0
+setp pid.0.FF1 [JOINT_0]FF1
+setp pid.0.FF2 [JOINT_0]FF2
+setp pid.0.deadband [JOINT_0]DEADBAND
+setp pid.0.maxoutput [JOINT_0]MAX_OUTPUT
+
+# position command signals
+setp hm2_[HOSTMOT2](BOARD).0.pwmgen.05.output-type 1 #pwm on pin1, dir on pin2
+setp hm2_[HOSTMOT2](BOARD).0.pwmgen.05.scale  [JOINT_0]OUTPUT_SCALE
+
+net emcmot.00.pos-cmd joint.0.motor-pos-cmd => pid.0.command
+#net motor.00.cmd-drv hm2_[HOSTMOT2](BOARD).0.encoder.05.velocity => pid.0.command-deriv
+net motor.00.command  pid.0.output  =>  hm2_[HOSTMOT2](BOARD).0.pwmgen.05.value
+
+# ################
+# Y1 [1] Axis
+# ################
+
+# axis enable chain
+newsig emcmot.01.enable bit
+sets emcmot.01.enable FALSE
+net emcmot.01.enable => pid.1.enable
+net emcmot.01.enable => hm2_[HOSTMOT2](BOARD).0.pwmgen.00.enable
+net emcmot.01.enable <= joint.1.amp-enable-out 
+
+# encoder feedback
+setp hm2_[HOSTMOT2](BOARD).0.encoder.00.counter-mode 0
+setp hm2_[HOSTMOT2](BOARD).0.encoder.00.filter 1
+setp hm2_[HOSTMOT2](BOARD).0.encoder.00.index-invert 0
+setp hm2_[HOSTMOT2](BOARD).0.encoder.00.index-mask 0
+setp hm2_[HOSTMOT2](BOARD).0.encoder.00.index-mask-invert 0
+
+setp  hm2_[HOSTMOT2](BOARD).0.encoder.00.scale  [AXIS_Y]INPUT_SCALE
+net motor.01.pos-fb hm2_[HOSTMOT2](BOARD).0.encoder.00.position => pid.1.feedback
+net motor.01.pos-fb => joint.1.motor-pos-fb #push copy back to Axis GUI
+
+# set PID loop gains later as Y axis group
+
+# position command signals
+setp hm2_[HOSTMOT2](BOARD).0.pwmgen.00.output-type 1 #pwm on pin1, dir on pin2
+setp hm2_[HOSTMOT2](BOARD).0.pwmgen.00.scale [AXIS_Y]OUTPUT_SCALE
+
+net emcmot.01.pos-cmd joint.1.motor-pos-cmd => pid.1.command
+#net motor.01.cmd-drv hm2_[HOSTMOT2](BOARD).0.encoder.00.velocity => pid.1.command-deriv
+net motor.01.command  pid.1.output  =>  hm2_[HOSTMOT2](BOARD).0.pwmgen.00.value
+
+
+# ################
+# Z1 [2] Axis
+# ################
+
+# axis enable chain
+newsig emcmot.02.enable bit
+sets emcmot.02.enable FALSE
+net emcmot.02.enable => pid.2.enable
+net emcmot.02.enable => hm2_[HOSTMOT2](BOARD).0.pwmgen.07.enable
+net emcmot.02.enable <= joint.2.amp-enable-out 
+
+# encoder feedback
+setp hm2_[HOSTMOT2](BOARD).0.encoder.07.counter-mode 0
+setp hm2_[HOSTMOT2](BOARD).0.encoder.07.filter 1
+setp hm2_[HOSTMOT2](BOARD).0.encoder.07.index-invert 0
+setp hm2_[HOSTMOT2](BOARD).0.encoder.07.index-mask 0
+setp hm2_[HOSTMOT2](BOARD).0.encoder.07.index-mask-invert 0
+
+setp  hm2_[HOSTMOT2](BOARD).0.encoder.07.scale  [AXIS_Z]INPUT_SCALE
+net motor.02.pos-fb hm2_[HOSTMOT2](BOARD).0.encoder.07.position => pid.2.feedback
+net motor.02.pos-fb => joint.2.motor-pos-fb #push copy back to Axis GUI
+
+# set PID loop gains later in common Z1/Z2 section
+
+# position command signals
+setp hm2_[HOSTMOT2](BOARD).0.pwmgen.07.output-type 1 #pwm on pin1, dir on pin2
+setp hm2_[HOSTMOT2](BOARD).0.pwmgen.07.scale [AXIS_Z]OUTPUT_SCALE
+
+net emcmot.02.pos-cmd joint.2.motor-pos-cmd => pid.2.command
+#net motor.02.cmd-drv hm2_[HOSTMOT2](BOARD).0.encoder.07.velocity => pid.2.command-deriv
+net motor.02.command  pid.2.output  =>  hm2_[HOSTMOT2](BOARD).0.pwmgen.07.value
+
+# ################
+# A [3] Axis
+# ################
+
+# axis enable chain
+newsig emcmot.03.enable bit
+sets emcmot.03.enable FALSE
+net emcmot.03.enable => pid.3.enable
+net emcmot.03.enable => hm2_[HOSTMOT2](BOARD).0.pwmgen.02.enable
+net emcmot.03.enable <= joint.3.amp-enable-out 
+
+# encoder feedback
+setp hm2_[HOSTMOT2](BOARD).0.encoder.02.counter-mode 0
+setp hm2_[HOSTMOT2](BOARD).0.encoder.02.filter 1
+setp hm2_[HOSTMOT2](BOARD).0.encoder.02.index-invert 0
+setp hm2_[HOSTMOT2](BOARD).0.encoder.02.index-mask 0
+setp hm2_[HOSTMOT2](BOARD).0.encoder.02.index-mask-invert 0
+
+setp  hm2_[HOSTMOT2](BOARD).0.encoder.02.scale  [JOINT_3]INPUT_SCALE
+net motor.03.pos-fb hm2_[HOSTMOT2](BOARD).0.encoder.02.position => pid.3.feedback
+net motor.03.pos-fb => joint.3.motor-pos-fb #push copy back to Axis GUI
+
+# set PID loop gains from inifile
+setp pid.3.Pgain [JOINT_3]P
+setp pid.3.Igain [JOINT_3]I
+setp pid.3.Dgain [JOINT_3]D
+setp pid.3.bias [JOINT_3]BIAS
+setp pid.3.FF0 [JOINT_3]FF0
+setp pid.3.FF1 [JOINT_3]FF1
+setp pid.3.FF2 [JOINT_3]FF2
+setp pid.3.deadband [JOINT_3]DEADBAND
+setp pid.3.maxoutput [JOINT_3]MAX_OUTPUT
+
+# position command signals
+setp hm2_[HOSTMOT2](BOARD).0.pwmgen.02.output-type 1 #pwm on pin1, dir on pin2
+setp hm2_[HOSTMOT2](BOARD).0.pwmgen.02.scale  [JOINT_3]OUTPUT_SCALE
+
+net emcmot.03.pos-cmd joint.3.motor-pos-cmd => pid.3.command
+#net motor.03.cmd-drv hm2_[HOSTMOT2](BOARD).0.encoder.02.velocity => pid.3.command-deriv
+net motor.03.command  pid.3.output  =>  hm2_[HOSTMOT2](BOARD).0.pwmgen.02.value
+
+# ################
+# Y2 [4] Axis
+# ################
+
+# axis enable chain
+newsig emcmot.04.enable bit
+sets emcmot.04.enable FALSE
+net emcmot.04.enable => pid.4.enable
+net emcmot.04.enable => hm2_[HOSTMOT2](BOARD).0.pwmgen.01.enable
+net emcmot.04.enable <= joint.4.amp-enable-out 
+
+# encoder feedback
+setp hm2_[HOSTMOT2](BOARD).0.encoder.01.counter-mode 0
+setp hm2_[HOSTMOT2](BOARD).0.encoder.01.filter 1
+setp hm2_[HOSTMOT2](BOARD).0.encoder.01.index-invert 0
+setp hm2_[HOSTMOT2](BOARD).0.encoder.01.index-mask 0
+setp hm2_[HOSTMOT2](BOARD).0.encoder.01.index-mask-invert 0
+
+setp  hm2_[HOSTMOT2](BOARD).0.encoder.01.scale  [AXIS_Y]INPUT_SCALE
+net motor.04.pos-fb hm2_[HOSTMOT2](BOARD).0.encoder.01.position => pid.4.feedback
+net motor.04.pos-fb => joint.4.motor-pos-fb #push copy back to Axis GUI
+
+# set PID loop gains later as Y axis group
+
+# position command signals
+setp hm2_[HOSTMOT2](BOARD).0.pwmgen.01.output-type 1 #pwm on pin1, dir on pin2
+setp hm2_[HOSTMOT2](BOARD).0.pwmgen.01.scale [AXIS_Y]OUTPUT_SCALE
+
+net emcmot.04.pos-cmd joint.4.motor-pos-cmd => pid.4.command
+#net motor.04.cmd-drv hm2_[HOSTMOT2](BOARD).0.encoder.01.velocity => pid.4.command-deriv
+net motor.04.command  pid.4.output  =>  hm2_[HOSTMOT2](BOARD).0.pwmgen.01.value
+
+
+
+
+# ################
+# Z2 [5] Axis
+# ################
+
+# axis enable chain
+newsig emcmot.05.enable bit
+sets emcmot.05.enable FALSE
+net emcmot.05.enable => pid.5.enable
+net emcmot.05.enable => hm2_[HOSTMOT2](BOARD).0.pwmgen.06.enable
+net emcmot.05.enable <= joint.5.amp-enable-out 
+
+# encoder feedback
+setp hm2_[HOSTMOT2](BOARD).0.encoder.06.counter-mode 0
+setp hm2_[HOSTMOT2](BOARD).0.encoder.06.filter 1
+setp hm2_[HOSTMOT2](BOARD).0.encoder.06.index-invert 0
+setp hm2_[HOSTMOT2](BOARD).0.encoder.06.index-mask 0
+setp hm2_[HOSTMOT2](BOARD).0.encoder.06.index-mask-invert 0
+
+setp  hm2_[HOSTMOT2](BOARD).0.encoder.06.scale  [AXIS_Z]INPUT_SCALE
+net motor.05.pos-fb hm2_[HOSTMOT2](BOARD).0.encoder.06.position => pid.5.feedback
+net motor.05.pos-fb => joint.5.motor-pos-fb #push copy back to Axis GUI
+
+# set PID loop gains later in common Z1/Z2 section
+
+# position command signals
+setp hm2_[HOSTMOT2](BOARD).0.pwmgen.06.output-type 1 #pwm on pin1, dir on pin2
+setp hm2_[HOSTMOT2](BOARD).0.pwmgen.06.scale [AXIS_Z]OUTPUT_SCALE
+
+net emcmot.05.pos-cmd joint.5.motor-pos-cmd => pid.5.command
+#net motor.05.cmd-drv hm2_[HOSTMOT2](BOARD).0.encoder.06.velocity => pid.5.command-deriv
+net motor.05.command  pid.5.output  =>  hm2_[HOSTMOT2](BOARD).0.pwmgen.06.value
+
+# ##################################################
+# Shared Y1/Y2 pid gain settings
+# ##################################################
+
+net pid1.Pgain pid.1.Pgain pid.4.Pgain
+net pid1.Igain pid.1.Igain pid.4.Igain
+net pid1.Dgain pid.1.Dgain pid.4.Dgain
+net pid1.bias pid.1.bias pid.4.bias
+net pid1.FF0 pid.1.FF0 pid.4.FF0
+net pid1.FF1 pid.1.FF1 pid.4.FF1
+net pid1.FF2 pid.1.FF2 pid.4.FF2
+net pid1.deadband pid.1.deadband pid.4.deadband
+net pid1.maxoutput pid.1.maxoutput pid.4.maxoutput
+
+sets pid1.Pgain [AXIS_Y]P
+sets pid1.Igain [AXIS_Y]I
+sets pid1.Dgain [AXIS_Y]D
+sets pid1.bias [AXIS_Y]BIAS
+sets pid1.FF0 [AXIS_Y]FF0
+sets pid1.FF1 [AXIS_Y]FF1
+sets pid1.FF2 [AXIS_Y]FF2
+sets pid1.deadband [AXIS_Y]DEADBAND
+sets pid1.maxoutput [AXIS_Y]MAX_OUTPUT
+
+# ##################################################
+# Shared Z1/Z2 pid gain settings
+# ##################################################
+
+net pid2.Pgain pid.2.Pgain pid.5.Pgain
+net pid2.Igain pid.2.Igain pid.5.Igain
+net pid2.Dgain pid.2.Dgain pid.5.Dgain
+net pid2.bias pid.2.bias pid.5.bias
+net pid2.FF0 pid.2.FF0 pid.5.FF0
+net pid2.FF1 pid.2.FF1 pid.5.FF1
+net pid2.FF2 pid.2.FF2 pid.5.FF2
+net pid2.deadband pid.2.deadband pid.5.deadband
+net pid2.maxoutput pid.2.maxoutput pid.5.maxoutput
+
+sets pid2.Pgain [AXIS_Z]P
+sets pid2.Igain [AXIS_Z]I
+sets pid2.Dgain [AXIS_Z]D
+sets pid2.bias [AXIS_Z]BIAS
+sets pid2.FF0 [AXIS_Z]FF0
+sets pid2.FF1 [AXIS_Z]FF1
+sets pid2.FF2 [AXIS_Z]FF2
+sets pid2.deadband [AXIS_Z]DEADBAND
+sets pid2.maxoutput [AXIS_Z]MAX_OUTPUT
+
+
+#
+# ##################################################
+# Standard I/O Block - EStop, Etc
+# ##################################################
+
+setp hm2_[HOSTMOT2](BOARD).0.gpio.048.is_output 0
+setp hm2_[HOSTMOT2](BOARD).0.gpio.049.is_output 0
+setp hm2_[HOSTMOT2](BOARD).0.gpio.050.is_output 0
+setp hm2_[HOSTMOT2](BOARD).0.gpio.051.is_output 0
+setp hm2_[HOSTMOT2](BOARD).0.gpio.052.is_output 0
+setp hm2_[HOSTMOT2](BOARD).0.gpio.053.is_output 0
+setp hm2_[HOSTMOT2](BOARD).0.gpio.054.is_output 0
+setp hm2_[HOSTMOT2](BOARD).0.gpio.055.is_output 0
+setp hm2_[HOSTMOT2](BOARD).0.gpio.056.is_output 0
+setp hm2_[HOSTMOT2](BOARD).0.gpio.057.is_output 0
+setp hm2_[HOSTMOT2](BOARD).0.gpio.058.is_output 0
+setp hm2_[HOSTMOT2](BOARD).0.gpio.059.is_output 0
+setp hm2_[HOSTMOT2](BOARD).0.gpio.060.is_output 0
+setp hm2_[HOSTMOT2](BOARD).0.gpio.061.is_output 0
+setp hm2_[HOSTMOT2](BOARD).0.gpio.062.is_output 0
+setp hm2_[HOSTMOT2](BOARD).0.gpio.063.is_output 0
+setp hm2_[HOSTMOT2](BOARD).0.gpio.064.is_output 1
+setp hm2_[HOSTMOT2](BOARD).0.gpio.064.invert_output 1
+setp hm2_[HOSTMOT2](BOARD).0.gpio.065.is_output 1
+setp hm2_[HOSTMOT2](BOARD).0.gpio.066.is_output 1
+setp hm2_[HOSTMOT2](BOARD).0.gpio.066.invert_output 1
+setp hm2_[HOSTMOT2](BOARD).0.gpio.067.is_output 1
+setp hm2_[HOSTMOT2](BOARD).0.gpio.068.is_output 1
+setp hm2_[HOSTMOT2](BOARD).0.gpio.069.is_output 1
+setp hm2_[HOSTMOT2](BOARD).0.gpio.070.is_output 1
+setp hm2_[HOSTMOT2](BOARD).0.gpio.071.is_output 1
+
+# create a signal for the estop loopback
+net estop-and iocontrol.0.user-enable-out => and2.0.in0
+net stop-loop and2.0.out => iocontrol.0.emc-enable-in
+
+    # VFD alarm
+    net spindle-alarm => not.0.in
+    net vfd-alarm-estop not.0.out => and2.0.in1
+
+# create signals for tool loading loopback
+net tool-prep-loop iocontrol.0.tool-prepare => iocontrol.0.tool-prepared
+net tool-change-loop iocontrol.0.tool-change => iocontrol.0.tool-changed
+
+# at-speed
+net motor-at-speed  hm2_[HOSTMOT2](BOARD).0.gpio.048.in_not => spindle.0.at-speed
+
+# spindle-speed
+setp limit1.0.min 0
+setp limit1.0.max 24000
+net spindle-speed-cmd       spindle.0.speed-out => limit1.0.in
+net spindle-speed-limited   limit1.0.out => vfd.OutputFrequencyCommandW
+
+## spindle enable
+net spindle-fwd         spindle.0.forward => hm2_[HOSTMOT2](BOARD).0.gpio.064.out
+
+# VFD Reset
+net vfd-reset           => hm2_[HOSTMOT2](BOARD).0.gpio.066.out
+
+# ##################################################
+#
+# homing
+#
+# ##################################################
+
+# X
+net home-switch-x <= hm2_[HOSTMOT2](BOARD).0.gpio.049.in_not
+net home-switch-x => joint.0.home-sw-in
+net x-index-enable <= joint.0.index-enable
+net x-index-enable => hm2_[HOSTMOT2](BOARD).0.encoder.05.index-enable
+net x-index-enable => pid.0.index-enable
+
+# Y1
+net home-switch-y1 <= hm2_[HOSTMOT2](BOARD).0.gpio.051.in_not
+net home-switch-y1 => joint.1.home-sw-in
+
+# Y2
+net home-switch-y2 <= hm2_[HOSTMOT2](BOARD).0.gpio.053.in_not
+net home-switch-y2 => joint.4.home-sw-in
+
+# Z1
+net home-switch-z1 <= hm2_[HOSTMOT2](BOARD).0.gpio.055.in_not
+net home-switch-z1 => joint.2.home-sw-in
+net z1-index-enable <= joint.2.index-enable
+net z1-index-enable => hm2_[HOSTMOT2](BOARD).0.encoder.07.index-enable
+net z1-index-enable => pid.2.index-enable
+
+# Z2
+net home-switch-z2 <= hm2_[HOSTMOT2](BOARD).0.gpio.057.in_not
+net home-switch-z2 => joint.5.home-sw-in
+net z2-index-enable <= joint.5.index-enable
+net z2-index-enable => hm2_[HOSTMOT2](BOARD).0.encoder.06.index-enable
+net z2-index-enable => pid.5.index-enable
+
+
+# Probe
+net probe-raw <= hm2_[HOSTMOT2](BOARD).0.gpio.059.in_not
+net probe-raw => debounce.0.0.in
+net probe <= debounce.0.0.out
+net probe => motion.probe-input
+
+
+#loadusr linuxcncrsh -- -ini /home/frankt/emc2/configs/cnc-router.ini
+

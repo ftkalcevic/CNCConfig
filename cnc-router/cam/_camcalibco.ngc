@@ -1,0 +1,16 @@
+o<_camcalibco> sub
+
+(save offset coordinates in 2113 and 2114)
+g92 x0 y0 z0
+g92.2
+#<_CamOfsX> = #5211
+#<_CamOfsY> = #5212
+g92.1
+
+#2113 = [#<_CamOfsX> - #2111]
+#2114 = [#<_CamOfsY> - #2112]
+
+(DEBUG, Tool-Camera offset Saved X=#2113 Y=#2114)
+
+o<_camcalibco> endsub
+M2

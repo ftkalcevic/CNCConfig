@@ -1,0 +1,50 @@
+net hbp_ready hbp.ready => gladevcp.hbp_ready
+net hbp_running hbp.running => gladevcp.hbp_running
+net hbp_temp hbp.temp => gladevcp.hbp_temperature
+net hbp_set_temp hbp.actual-set-temp => gladevcp.hbp_actual-set-temp
+setp gladevcp.hbp_status 1
+
+net ext_ready ext.ready => gladevcp.ext_ready
+net ext_running ext.running => gladevcp.ext_running
+net ext_temp ext.temp => gladevcp.ext_temperature
+net ext_set_temp ext.actual-set-temp => gladevcp.ext_actual-set-temp
+setp gladevcp.ext_status 1
+
+
+loadrt time
+loadrt not count=3
+loadrt and2 count=4
+
+addf time.0 servo-thread
+addf not.0 servo-thread
+addf not.1 servo-thread
+addf not.2 servo-thread
+addf and2.0 servo-thread
+addf and2.1 servo-thread
+addf and2.2 servo-thread
+addf and2.3 servo-thread
+
+
+net hbp_ready => and2.0.in0
+net ext_ready => and2.0.in1
+net and_feedhold and2.0.out => not.0.in
+net not_temp_feedhold not.0.out => and2.1.in0
+net temp_hold_override gladevcp.feed-hold-override-not => and2.1.in1
+net feed-hold and2.1.out => motion.feed-hold
+net hold_override_led gladevcp.feed-hold-override => gladevcp.led-temp-hold-override 
+setp gladevcp.hold_button_table 1
+
+
+net run-timer halui.program.is-running => and2.2.in0
+net reset-timer gladevcp.hal_timer_reset => not.1.in
+net not-reset-timer not.1.out => and2.2.in1
+net feed-hold and2.1.out => not.2.in
+net not-feed-hold not.2.out => and2.3.in0
+net time-start-and and2.2.out => and2.3.in1
+net time-start and2.3.out => time.0.start
+net timer-seconds gladevcp.timer_seconds <= time.0.seconds
+net timer-minutes gladevcp.timer_minutes <= time.0.minutes
+net timer-hours gladevcp.timer_hours <= time.0.hours
+
+
+

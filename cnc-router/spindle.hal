@@ -1,0 +1,13 @@
+net spindle-alarm uiSpindle.Alarm <= vfd.Alarm
+net spindle-ready uiSpindle.InverterReady <= vfd.InvertReady
+net spindle-status uiSpindle.InverterStatus <= vfd.InverterStatusR
+net spindle-trip1 uiSpindle.TripMonitor1 <= vfd.TripMonitor1
+net spindle-trip2 uiSpindle.TripMonitor2 <= vfd.TripMonitor2
+net spindle-trip3 uiSpindle.TripMonitor3 <= vfd.TripMonitor3
+net vfd-reset <= uiSpindle.TripReset
+net motor-at-speed => uiSpindle.at-speed
+net spindle-speed-cmd <=  spindle.0.speed-out
+net spindle-actual-rpm uiSpindle.ActualRPM <= vfd.OutputFrequencyMonitor
+net spindle-speed-limited => uiSpindle.TargetRPM
+net spindle-voltage uiSpindle.OutputVoltage <= vfd.OutputVoltageMonitor
+net spindle-current uiSpindle.OutputCurrent <= vfd.OutputCurrentMonitor

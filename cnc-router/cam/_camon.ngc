@@ -1,0 +1,17 @@
+o<_camon> sub
+
+
+
+(move cam for offset)
+
+
+g91 g0 x#2113 y#2114
+g90
+
+(print, Offseting X=#2113 Y=#2114)
+
+(move for CAM offset - old way with fixed offset)
+(g43 h99 g91 g0 x 1.75 y 63.531)
+(g90)
+o<_camon> endsub
+M2
