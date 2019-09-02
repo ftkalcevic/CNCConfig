@@ -1,0 +1,7 @@
+G21 (mm)
+G64 (path blending - best speed)
+G18 (select ZX plane for lathe)
+G7 (lathe radius mode)
+
+M2
+

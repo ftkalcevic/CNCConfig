@@ -5,5 +5,4 @@ export EMCPATH=/home/frankt/linuxcnc-dev
 
 . $EMCPATH/scripts/rip-environment
 #rm /home/frankt/emc2/9x20lathe/9x20lathe.var
-$EMCPATH/scripts/linuxcnc /home/frankt/linuxcnc/9x20lathe/9x20lathe.ini
-#emc /home/frankt/emc2/9x20lathe/9x20lathe.ini
+$EMCPATH/scripts/linuxcnc /home/frankt/linuxcnc/9x20lathe/9x20lathe-touchy.ini

@@ -1,0 +1,25 @@
+
+loadusr -Wn hidcomp  /home/frankt/src/hidcomp/hidcomp/release/hidcomp -ini /home/frankt/linuxcnc/9x20lathe/9x20lathe.ini /home/frankt/linuxcnc/9x20lathe/lathe-pendant.hid
+
+
+# touchy required controls
+
+# program stop
+net pendant_stop touchy.abort hidcomp.0.Red.in
+
+
+# program run
+net pendant_run touchy.cycle-start hidcomp.0.Green.in
+
+
+# program single step
+net pendant_step touchy.single-block hidcomp.0.Amber.in
+
+# pendant heartbeat
+loadrt watchdog2
+setp watchdog2.0.initial-timeout 10.0
+setp watchdog2.0.timeout 2.0
+net estop-source2 watchdog2.0.out => estop-and.in-01
+net hb_pulse hidcomp.0.Heartbeat.raw => watchdog2.0.in-s32
+addf watchdog2.0 servo-thread
+

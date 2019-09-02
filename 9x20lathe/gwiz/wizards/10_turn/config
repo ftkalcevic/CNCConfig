@@ -1,0 +1,13 @@
+S|X|X Start|Starting outside point for turning|11
+S|X|X End|Final turned dimension (includes rough and finish passes)|10.0
+S|Z|Z Start|Z coordinate start|0.0
+S|Z|Z End|Z coordinate end|-1.0
+S||Rough Feed rate (mm/rev)|Feed rate for roughing pass|0.2
+S||Rough Cut Depth (mm)|Roughing depth of cut per pass|0.5
+U|Finish Passes|Number of finishing passes|1
+S||Finish Feed rate (mm/rev)|Feed rate for the Finishing pass|0.1
+S||Finish Cut Depth|Depth of cut for the Finishing pass|0.25
+U|Surface Feet per Minute|SFM cutting speed|100
+U|Maximum RPM|Maximum RPM to use when calculating based on SFM and diameter|1200
+S||Clearance|Relative distance to retract Z and X for rapid traverse for next pass|2
+
