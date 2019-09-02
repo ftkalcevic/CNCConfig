@@ -1,0 +1,12 @@
+#CamView pins
+
+loadrt oneshot names=forOn,forOff
+addf forOn servo-thread
+addf forOff servo-thread
+setp forOn.width .1
+setp forOff.width .1
+setp forOff.falling 1
+setp forOff.rising 0
+net forOnNet camview.hal_checkbutton1 => forOn.in forOff.in
+net cam1 forOn.out => halui.mdi-command-00		#cam checkbox on
+net cam2 forOff.out => halui.mdi-command-01		#cam checkbox off

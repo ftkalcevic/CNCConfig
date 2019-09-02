@@ -1,0 +1,14 @@
+%
+G61.1
+F5000
+o10 repeat [50]
+
+	G92 A0
+	G1 A5
+	G1 A0
+	m1
+	g0 A0
+
+o10 endwhile
+
+%

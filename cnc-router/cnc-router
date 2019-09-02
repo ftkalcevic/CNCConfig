@@ -1,0 +1,5 @@
+#!/bin/bash
+
+cd /home/frankt/linuxcnc/configs
+. ~/linuxcnc-dev/scripts/rip-environment
+linuxcnc cnc-router.ini

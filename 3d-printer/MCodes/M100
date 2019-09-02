@@ -1,0 +1,6 @@
+#!/bin/bash
+#Stop heaters
+halcmd setp ext.run 0
+halcmd setp hbp.run 0
+exit 0
+

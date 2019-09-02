@@ -1,0 +1,19 @@
+#CamView pins
+
+loadrt oneshot names=forOn,forOff
+addf forOn servo-thread
+addf forOff servo-thread
+setp forOn.width .1
+setp forOff.width .1
+setp forOff.falling 1
+setp forOff.rising 0
+net forOnNet camview.hal_checkbutton1 => forOn.in forOff.in
+net cam1 forOn.out => halui.mdi-command-00		#cam checkbox on
+net cam2 forOff.out => halui.mdi-command-01		#cam checkbox off
+net cam3 camview.hal_button1 => halui.mdi-command-02	#save xyz
+net cam4 camview.hal_button2 => halui.mdi-command-03	#center3
+net cam5 camview.hal_button3 => halui.mdi-command-04	#center4
+net cam6 camview.hal_button4 => halui.mdi-command-05	#mark-crosshair
+net cam7 camview.hal_button5 => halui.mdi-command-06	#calibrate-crosshair
+net cam8 camview.hal_button6 => halui.mdi-command-07	#calculate and execute rotation offset
+net cam9 camview.hal_button7 => halui.mdi-command-08	#calculate and execute x-y offset

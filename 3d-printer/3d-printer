@@ -1,0 +1,5 @@
+#!/bin/bash
+
+cd /home/frankt/emc2/printer
+. ~/emc2-dev/emc2-dev/scripts/rip-environment
+emc 3d-printer.ini

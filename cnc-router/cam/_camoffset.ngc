@@ -1,0 +1,19 @@
+o<_camoffset> sub
+
+(#<_CamX4>	Ax)
+(#<_CamY4>	Ay)
+(#<_CamX3>	A'x)
+(#<_CamY3>	A'y)
+(#<_CamX2>	Bx)
+(#<_CamY2>	By)
+(#<_CamX1>	B'x)
+(#<_CamY1>	B'y)
+
+
+G10 L20 P0 x#<_CamX1> y#<_CamY1>
+
+#3999 = 0 (clear points to make for new saves)
+
+
+o<_camoffset> endsub
+M2

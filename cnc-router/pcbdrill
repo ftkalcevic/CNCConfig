@@ -1,0 +1,5 @@
+#!/bin/bash
+
+cd /home/frankt/emc2/configs
+. ~/emc2-dev/emc2-dev/scripts/rip-environment
+/home/frankt/svn/PCBdrill/pcbdrill -ini cnc-router.ini

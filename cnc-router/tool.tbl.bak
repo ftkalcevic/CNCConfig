@@ -1,0 +1,33 @@
+T12 P12 D2 ;2mm 1 flute carbide 
+T4 P4 D3 ;3mm 1 flute carbide 
+T6 P6 D3.175 ;1/8" 2 flute carbide 
+T7 P7 D3.175 ;1/8" ball 2 flute carbide 
+T22 P22 D6.35 ;1/4" 
+T24 P24 D2.5 ;2.5mm hss drill 
+T28 P28 D4 ;4mm 1 flute carbide 
+T27 P27 D2.5 ;2.5mm hss drill 
+T29 P29 D3.5 ;3.5mm hss drill 
+T30 P30 D6.35 ;1/4" 2 flute carbide router 
+T1 P1 D1 ;added 20120424 
+T2 P2 D1 ;added 20120424 
+T3 P3 D1 ;added 20120424 
+T5 P5 D1 ;added 20120424 
+T8 P8 D1 ;added 20120424 
+T20 P20 D1 ;45 deg engraving tool 
+T9999 P9999 X81.6882 Y-12.942 Z22.6578 D1 ;camera 
+T31 P31 D1.5875 ;1/16" solid carbide 2 flute router bit 
+T16 P16 D2 ;2mm carbide drill 
+T25 P25 D1.6 ;1.6mm drill 
+T23 P23 D1 ;1mm ball nosed 
+T18 P18 D1 ;30' engraving 
+T35 P35 D0.8 ;.8mm drill 
+T36 P36 D1 ;1mm drill 
+T13 P13 D3.175 ;1/8 drill 
+T10 P10 D6 ;6mm end mill 
+T37 P37 D10 ;10mm hss spot drill 
+T38 P38 D13 ;13mm straight router 
+T39 P39 D3.175 ;1/8 taper mill 
+T33 P33 D3.175 ;0 center drill 
+T41 P41 D4.5 ;4.5mm drill 
+T42 P42 D1 ;1mm slot drill 
+T43 P43 D6.35 ;1/4 Ballnose router 

@@ -1,0 +1,2 @@
+loadusr -Wn hbp /home/frankt/emc2/printer/heater.py hbp /dev/ttyUSB.HeatedBuildPlatform
+loadusr -Wn ext /home/frankt/emc2/printer/heater.py ext /dev/ttyUSB.ExtruderHeater

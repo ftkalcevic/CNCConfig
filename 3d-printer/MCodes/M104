@@ -1,0 +1,7 @@
+#!/bin/bash
+# Set extruder temperature and run
+temperature=$1
+halcmd setp ext.set-temp $temperature
+halcmd setp ext.run 1
+exit 0
+

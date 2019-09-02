@@ -1,0 +1,5 @@
+#!/bin/bash
+temperature=$1
+halcmd setp hbp.set-temp $temperature
+exit 0
+
