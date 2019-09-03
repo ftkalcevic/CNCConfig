@@ -16,10 +16,31 @@ net pendant_run touchy.cycle-start hidcomp.0.Green.in
 net pendant_step touchy.single-block hidcomp.0.Amber.in
 
 # pendant heartbeat
+#loadrt watchdog2
+#setp watchdog2.0.initial-timeout 10.0
+#setp watchdog2.0.timeout 2.0
+#net estop-source2 watchdog2.0.out => estop-and.in-01
+#net hb_pulse hidcomp.0.Heartbeat.raw => watchdog2.0.in-s32
+#addf watchdog2.0 servo-thread
+
+# jogging
+net joginc touchy.jog.wheel.increment 
+net joginc => joint.0.jog-scale
+net joginc => joint.1.jog-scale
+
+net enjogx touchy.jog.wheel.x => joint.0.jog-enable
+net enjogz touchy.jog.wheel.z => joint.1.jog-enable
+
+net jog-wheel-count hidcomp.0.Jog-Wheel.count
+net jog-wheel-count joint.0.jog-counts
+net jog-wheel-count joint.1.jog-counts
+net jog-wheel-count touchy.wheel-counts
+
+# pendant heartbeat
 loadrt watchdog2
 setp watchdog2.0.initial-timeout 10.0
 setp watchdog2.0.timeout 2.0
 net estop-source2 watchdog2.0.out => estop-and.in-01
 net hb_pulse hidcomp.0.Heartbeat.raw => watchdog2.0.in-s32
 addf watchdog2.0 servo-thread
-
+#

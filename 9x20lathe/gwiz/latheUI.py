@@ -17,7 +17,7 @@ wizard_path = gwiz_path + "/wizards"
 wizards = []
 digits = 3
 pxCalc = None
-calcSize = 64
+calcSize = 32
 debug = True
 dialog = None
 
@@ -465,7 +465,7 @@ class CalculatorDialog(gtk.Dialog):
         super(CalculatorDialog, self).__init__(*args, **kwargs)
 
         self.builder = gtk.Builder()
-        self.builder.add_from_file("calc.ui")
+        self.builder.add_from_file(gwiz_path+os.sep+"calc.ui")
         self.dialog = self.builder.get_object("dialogCalc")
         self.dialog.set_modal(True)
         print self.dialog

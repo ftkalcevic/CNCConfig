@@ -1,6 +1,6 @@
 #loadusr -Wn pendant-menu /home/frankt/linuxcnc/9x20lathe/pendant-menu.py -ini /home/frankt/linuxcnc/9x20lathe/9x20lathe.ini
 #loadusr -Wn hidcomp  /usr/bin/hidcomp -ini /home/frankt/linuxcnc/9x20lathe/9x20lathe.ini /home/frankt/linuxcnc/9x20lathe/lathe-pendant.hid
-loadusr -Wn hidcomp  /home/frankt/src/hidcomp/hid/hidcomp/release/hidcomp -ini /home/frankt/linuxcnc/9x20lathe/9x20lathe.ini /home/frankt/linuxcnc/9x20lathe/lathe-pendant.hid
+loadusr -Wn hidcomp  /home/frankt/src/hidcomp/hidcomp/release/hidcomp -ini /home/frankt/linuxcnc/9x20lathe/9x20lathe.ini /home/frankt/linuxcnc/9x20lathe/lathe-pendant.hid
 #loadusr hidcomp -ini /home/frankt/linuxcnc/9x20lathe/9x20lathe.ini /home/frankt/linuxcnc/9x20lathe/lathe-pendant.hid
 
 # hook pendant pins up to the menu
@@ -112,31 +112,31 @@ net Feed_selected select8.0.out5
 
 #jog z
 #  jog-wheel-count => axis.2.jog-count
-net jog-wheel-count axis.2.jog-counts
+net jog-wheel-count joint.1.jog-counts
 #  enable_vel => axis.2.jog-vel-mode
-net enable_vel axis.2.jog-vel-mode
+net enable_vel joint.1.jog-vel-mode
 #  mulitiplier_select => axis.2.jog-scale
-net multiplier-value axis.2.jog-scale
+net multiplier-value joint.1.jog-scale
 #  enable_either && Z_Select => axis.2.jog-enable
 addf and2.0 servo-thread
 
 net enable_either and2.0.in0
 net Z_selected and2.0.in1
-net Z_jog_enable and2.0.out => axis.2.jog-enable
+net Z_jog_enable and2.0.out => joint.1.jog-enable
 
 #jog x
 #  jog-wheel-count => axis.0.jog-count
-net jog-wheel-count axis.0.jog-counts
+net jog-wheel-count joint.0.jog-counts
 #  enable_vel => axis.0.jog-vel-mode
-net enable_vel axis.0.jog-vel-mode
+net enable_vel joint.0.jog-vel-mode
 #  mulitiplier_select => axis.0.jog-scale
-net multiplier-value axis.0.jog-scale
+net multiplier-value joint.0.jog-scale
 #  enable_either && X_Select => axis.0.jog-enable
 addf and2.1 servo-thread
 
 net enable_either and2.1.in0
 net X_selected and2.1.in1
-net X_jog_enable and2.1.out => axis.0.jog-enable
+net X_jog_enable and2.1.out => joint.0.jog-enable
 
 
 # feed rate override
@@ -156,15 +156,15 @@ net FeedOverride_enabled and2.2.out => halui.feed-override.count-enable
 #      in manual mode, we set the spindle speed (target speed?)
 #
 # jog-wheel-count => halui.spindle-override-counts
-net jog-wheel-count => halui.spindle-override.counts
+net jog-wheel-count => halui.spindle.0.override.counts
 # scale is fixed - 1 turn = 100%
-setp halui.spindle-override.scale 0.0025
+setp halui.spindle.0.override.scale 0.0025
 # enable_either && Spindle_Seleceted => halui.spindle-override-count-enable
 addf and2.3 servo-thread
 
 net enable_either => and2.3.in0
 net Spindle_selected => and2.3.in1
-net SpindleOverride_enabled and2.3.out => halui.spindle-override.count-enable
+net SpindleOverride_enabled and2.3.out => halui.spindle.0.override.count-enable
 
 
 
