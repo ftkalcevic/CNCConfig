@@ -57,10 +57,11 @@
                 <property name="round_digits">0</property>
                 <property name="digits">0</property>
                 <property name="value_pos">bottom</property>
+                <signal name="value-changed" handler="on_vscaleSpindleSpeed_value_changed" swapped="no"/>
               </object>
               <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
+                <property name="expand">True</property>
+                <property name="fill">False</property>
                 <property name="position">0</property>
               </packing>
             </child>
@@ -69,7 +70,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <child>
-                  <object class="HAL_ToggleButton" id="btnSpindleForward">
+                  <object class="HAL_RadioButton" id="btnSpindleForward">
                     <property name="label" translatable="yes">Forward</property>
                     <property name="width_request">150</property>
                     <property name="height_request">150</property>
@@ -77,6 +78,8 @@
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="use_action_appearance">False</property>
+                    <property name="draw_indicator">False</property>
+                    <property name="group">btnSpindleStop</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -85,7 +88,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="HAL_ToggleButton" id="btnSpindleStop">
+                  <object class="HAL_RadioButton" id="btnSpindleStop">
                     <property name="label" translatable="yes">Stop</property>
                     <property name="width_request">120</property>
                     <property name="height_request">80</property>
@@ -93,6 +96,8 @@
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="use_action_appearance">False</property>
+                    <property name="draw_indicator">False</property>
+                    <signal name="toggled" handler="on_btnSpindleStop_toggled" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -101,7 +106,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="HAL_ToggleButton" id="btnSpindleReverse">
+                  <object class="HAL_RadioButton" id="btnSpindleReverse">
                     <property name="label" translatable="yes">Reverse</property>
                     <property name="width_request">120</property>
                     <property name="height_request">80</property>
@@ -109,6 +114,8 @@
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="use_action_appearance">False</property>
+                    <property name="draw_indicator">False</property>
+                    <property name="group">btnSpindleStop</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -118,15 +125,15 @@
                 </child>
               </object>
               <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
+                <property name="expand">True</property>
+                <property name="fill">False</property>
                 <property name="position">1</property>
               </packing>
             </child>
           </object>
           <packing>
             <property name="expand">True</property>
-            <property name="fill">True</property>
+            <property name="fill">False</property>
             <property name="position">0</property>
           </packing>
         </child>
@@ -135,24 +142,38 @@
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <child>
-              <placeholder/>
-            </child>
-            <child>
-              <object class="HAL_ToggleButton" id="btnRun">
-                <property name="label" translatable="yes">Run</property>
-                <property name="width_request">130</property>
-                <property name="height_request">130</property>
+              <object class="GtkHButtonBox" id="hbuttonbox1">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="use_action_appearance">False</property>
-                <signal name="clicked" handler="on_btnRun_clicked" swapped="no"/>
+                <property name="can_focus">False</property>
+                <child>
+                  <object class="HAL_ToggleButton" id="btnRun">
+                    <property name="label" translatable="yes">Run</property>
+                    <property name="width_request">230</property>
+                    <property name="height_request">130</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="use_action_appearance">False</property>
+                    <signal name="pressed" handler="on_btnRun_pressed" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
               </object>
               <packing>
-                <property name="expand">False</property>
+                <property name="expand">True</property>
                 <property name="fill">True</property>
-                <property name="position">1</property>
+                <property name="position">0</property>
               </packing>
+            </child>
+            <child>
+              <placeholder/>
             </child>
           </object>
           <packing>
@@ -217,8 +238,6 @@
             </child>
             <child>
               <object class="GtkSpinButton" id="spinXStart">
-                <property name="width_request">100</property>
-                <property name="height_request">80</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="editable">False</property>
@@ -236,13 +255,10 @@
               <packing>
                 <property name="left_attach">1</property>
                 <property name="right_attach">2</property>
-                <property name="y_options">GTK_FILL</property>
               </packing>
             </child>
             <child>
               <object class="GtkSpinButton" id="spinXEnd">
-                <property name="width_request">100</property>
-                <property name="height_request">80</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="editable">False</property>
@@ -262,13 +278,10 @@
                 <property name="right_attach">2</property>
                 <property name="top_attach">1</property>
                 <property name="bottom_attach">2</property>
-                <property name="y_options">GTK_FILL</property>
               </packing>
             </child>
             <child>
               <object class="GtkSpinButton" id="spinZStep">
-                <property name="width_request">100</property>
-                <property name="height_request">80</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="editable">False</property>
@@ -288,13 +301,10 @@
                 <property name="right_attach">2</property>
                 <property name="top_attach">3</property>
                 <property name="bottom_attach">4</property>
-                <property name="y_options">GTK_FILL</property>
               </packing>
             </child>
             <child>
               <object class="GtkSpinButton" id="spinSFM">
-                <property name="width_request">100</property>
-                <property name="height_request">80</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="editable">False</property>
@@ -313,7 +323,6 @@
                 <property name="right_attach">2</property>
                 <property name="top_attach">4</property>
                 <property name="bottom_attach">5</property>
-                <property name="y_options">GTK_FILL</property>
               </packing>
             </child>
             <child>
@@ -335,12 +344,6 @@
               </packing>
             </child>
             <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
               <object class="GtkLabel" id="label5">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
@@ -356,6 +359,7 @@ mm/rev</property>
               <object class="GtkSpinButton" id="spinXFeed">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="editable">False</property>
                 <property name="invisible_char">●</property>
                 <property name="primary_icon_activatable">False</property>
                 <property name="secondary_icon_activatable">False</property>
@@ -363,6 +367,7 @@ mm/rev</property>
                 <property name="secondary_icon_sensitive">True</property>
                 <property name="adjustment">adjXFeed</property>
                 <property name="digits">3</property>
+                <property name="numeric">True</property>
                 <signal name="button-press-event" handler="on_spinXFeed_button_press_event" swapped="no"/>
               </object>
               <packing>
@@ -370,6 +375,22 @@ mm/rev</property>
                 <property name="right_attach">2</property>
                 <property name="top_attach">2</property>
                 <property name="bottom_attach">3</property>
+              </packing>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <object class="GtkAlignment" id="alignment1">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <child>
+                  <placeholder/>
+                </child>
+              </object>
+              <packing>
+                <property name="top_attach">6</property>
+                <property name="bottom_attach">7</property>
               </packing>
             </child>
           </object>

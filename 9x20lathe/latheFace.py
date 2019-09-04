@@ -18,6 +18,11 @@ from touchy import preferences
 debug = False
 
 
+class SpindleState:
+    Stopped = 0
+    Forward = 1
+    Reverse = 2
+
 def running(s, do_poll=True):
     if do_poll: s.poll()
     return s.task_mode == linuxcnc.MODE_AUTO and s.interp_state != linuxcnc.INTERP_IDLE
@@ -54,6 +59,12 @@ class HandlerClass:
         self.load_defaults()
         self.load_settings()
 
+        self.btnSpindleReverse = self.builder.get_object("btnSpindleReverse")
+        self.btnSpindleForward = self.builder.get_object("btnSpindleForward")
+        self.btnSpindleStop = self.builder.get_object("btnSpindleStop")
+        self.vscaleSpindleSpeed = self.builder.get_object("vscaleSpindleSpeed")
+
+ 
     def load_settings(self):
         prefs = preferences.preferences()
         self.control_font_name = prefs.getpref('control_font', 'Sans 18', str)
@@ -121,8 +132,24 @@ class HandlerClass:
     def on_spinXEnd_button_press_event(self,w,d):
         self.DoCalculator(w)
 
+    def on_btnSpindleStop_toggled(self,w):
+        if self.btnSpindleStop.get_active():
+            linuxcnc.command().spindle(linuxcnc.SPINDLE_OFF)
+        else:
+            self.on_vscaleSpindleSpeed_value_changed(w)
 
+    def on_vscaleSpindleSpeed_value_changed(self,w):
+        
+        speed = float(self.vscaleSpindleSpeed.get_value())
+        if speed < 1:
+            speed = 1
 
+        if self.btnSpindleStop.get_active():
+            pass
+        elif self.btnSpindleForward.get_active():
+            linuxcnc.command().spindle(linuxcnc.SPINDLE_FORWARD,speed)
+        elif self.btnSpindleReverse.get_active():
+            linuxcnc.command().spindle(linuxcnc.SPINDLE_REVERSE,speed)
 
 def get_handlers(halcomp,builder,useropts):
     return [HandlerClass(halcomp,builder,useropts)]
