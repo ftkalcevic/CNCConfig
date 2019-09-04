@@ -3,8 +3,8 @@
   <requires lib="gtk+" version="2.16"/>
   <!-- interface-naming-policy project-wide -->
   <object class="GtkDialog" id="dialogCalc">
-    <property name="width_request">500</property>
-    <property name="height_request">600</property>
+    <property name="width_request">700</property>
+    <property name="height_request">800</property>
     <property name="can_focus">False</property>
     <property name="border_width">5</property>
     <property name="resizable">False</property>
@@ -25,13 +25,17 @@
             <child>
               <object class="GtkButton" id="buttonCalcSet">
                 <property name="label" translatable="yes">Set</property>
+                <property name="width_request">150</property>
+                <property name="height_request">80</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
+                <property name="use_action_appearance">False</property>
               </object>
               <packing>
                 <property name="expand">True</property>
                 <property name="fill">False</property>
+                <property name="padding">11</property>
                 <property name="position">0</property>
               </packing>
             </child>
@@ -41,6 +45,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
+                <property name="use_action_appearance">False</property>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -53,6 +58,7 @@
             <property name="expand">False</property>
             <property name="fill">False</property>
             <property name="padding">12</property>
+            <property name="pack_type">end</property>
             <property name="position">0</property>
           </packing>
         </child>
@@ -64,7 +70,6 @@
               <object class="GtkLabel" id="labelCalcTitle">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Set coordinate for X Start</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -74,6 +79,7 @@
             </child>
             <child>
               <object class="GtkEntry" id="calcDisplay">
+                <property name="height_request">50</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="editable">False</property>
@@ -97,11 +103,12 @@
                 <property name="n_rows">6</property>
                 <property name="n_columns">4</property>
                 <child>
-                  <object class="GtkButton" id="buttonCalcSqrt">
-                    <property name="label" translatable="yes">sqrt</property>
+                  <object class="GtkButton" id="buttonCalcHalX">
+                    <property name="label" translatable="yes">[X]</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="use_action_appearance">False</property>
                   </object>
                   <packing>
                     <property name="top_attach">1</property>
@@ -109,11 +116,12 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkButton" id="buttonCalcSquare">
-                    <property name="label" translatable="yes">x^2</property>
+                  <object class="GtkButton" id="buttonCalcHalZ">
+                    <property name="label" translatable="yes">[Z]</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="use_action_appearance">False</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
@@ -128,6 +136,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="use_action_appearance">False</property>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
@@ -142,6 +151,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="use_action_appearance">False</property>
                   </object>
                   <packing>
                     <property name="left_attach">3</property>
@@ -156,6 +166,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="use_action_appearance">False</property>
                   </object>
                   <packing>
                     <property name="top_attach">2</property>
@@ -168,6 +179,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="use_action_appearance">False</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
@@ -182,6 +194,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="use_action_appearance">False</property>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
@@ -196,6 +209,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="use_action_appearance">False</property>
                   </object>
                   <packing>
                     <property name="left_attach">3</property>
@@ -210,6 +224,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="use_action_appearance">False</property>
                   </object>
                   <packing>
                     <property name="top_attach">3</property>
@@ -222,6 +237,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="use_action_appearance">False</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
@@ -236,6 +252,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="use_action_appearance">False</property>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
@@ -250,6 +267,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="use_action_appearance">False</property>
                   </object>
                   <packing>
                     <property name="left_attach">3</property>
@@ -264,6 +282,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="use_action_appearance">False</property>
                   </object>
                   <packing>
                     <property name="top_attach">4</property>
@@ -276,6 +295,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="use_action_appearance">False</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
@@ -290,6 +310,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="use_action_appearance">False</property>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
@@ -304,6 +325,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="use_action_appearance">False</property>
                   </object>
                   <packing>
                     <property name="left_attach">3</property>
@@ -318,6 +340,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="use_action_appearance">False</property>
                   </object>
                   <packing>
                     <property name="top_attach">5</property>
@@ -330,6 +353,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="use_action_appearance">False</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
@@ -344,6 +368,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="use_action_appearance">False</property>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
@@ -358,6 +383,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="use_action_appearance">False</property>
                   </object>
                   <packing>
                     <property name="left_attach">3</property>
@@ -372,6 +398,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="use_action_appearance">False</property>
                   </object>
                 </child>
                 <child>
@@ -380,6 +407,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="use_action_appearance">False</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
@@ -392,6 +420,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="use_action_appearance">False</property>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
@@ -404,6 +433,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="use_action_appearance">False</property>
                   </object>
                   <packing>
                     <property name="left_attach">3</property>

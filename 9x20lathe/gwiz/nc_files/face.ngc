@@ -1,0 +1,34 @@
+O<face> sub (outside facing on the lathe)
+    #<startX> = #1
+    #<endX> = #2
+    #<stepZ> = #3
+    #<sfm> = #4
+    
+    #<maxrpm> = 1200
+    #<clearance> = 2
+    #<feed> = 0.1
+
+    (verify parameters)
+
+    (CSS mode)
+    #<mpm> = [#<sfm> * 12 * 25.4/1000]
+    G96 D#<maxrpm> S#<mpm>
+
+    (Make sure spindle is on)
+    M3
+
+    #<zPos> = #5422
+    #<zFinish> = [#<zPos> - #<stepZ>]
+
+	M1
+        G0 X#<startX>
+        G0 Z#<zFinish> 
+        G33 X#<endX> K#<feed>
+        G0 Z[#<zFinish>+#<clearance>]
+        G0 X[#<endX> + #<clearance>]
+        G0 Z#<zFinish>
+        
+    (rpm mode)
+    G97
+
+O<face> endsub

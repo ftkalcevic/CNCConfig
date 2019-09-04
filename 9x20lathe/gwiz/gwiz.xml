@@ -1,0 +1,12 @@
+<glade-catalog name="gwiz" library="gladepython" supports="libglade,gtkbuilder"
+               domain="glade-3" depends="gtk+">
+    <init-function>glade_python_init</init-function>
+    
+    <glade-widget-classes>
+        <glade-widget-class name="ImageEx" generic-name="ImageEx" title="Resizeable Image"/>
+    </glade-widget-classes>
+    
+    <glade-widget-group name="python" title="GWiz">
+        <glade-widget-class-ref name="ImageEx"/>
+    </glade-widget-group>
+</glade-catalog>

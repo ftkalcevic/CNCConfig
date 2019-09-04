@@ -10,7 +10,10 @@ import glib
 import gobject
 import linuxcnc
 import math
-
+from ImageEx import ImageEx
+from Calc import CalculatorDialog
+from touchy import preferences
+import pango
 
 gwiz_path = "/home/frankt/linuxcnc/9x20lathe/gwiz"
 wizard_path = gwiz_path + "/wizards"
@@ -18,64 +21,27 @@ wizards = []
 digits = 3
 pxCalc = None
 calcSize = 32
-debug = True
 dialog = None
 
+debug = False
 
-# ImageEx - based on https://stackoverflow.com/questions/5067310/pygtk-how-do-i-make-an-image-automatically-scale-to-fit-its-parent-widget
-
-class ImageEx(gtk.Image):
-    pixbuf = None
-
-    def __init__(self, *args, **kwargs):
-        super(ImageEx, self).__init__(*args, **kwargs)
-        self.connect("size-allocate", self.on_size_allocate)
-        self.lastWidth = -1
-        self.lastHeight = -1
-
-    def set_from_file(self, path):
-        self.path = path
-        pixbuf = gtk.gdk.pixbuf_new_from_file(self.path)
-        self.set_from_pixbuf(pixbuf)
-
-    def on_size_allocate(self, obj, rect):
-        # skip if no pixbuf set
-        if self.path is None:
-            return
-
-        pixbuf = self.get_pixbuf()
-
-        # calculate proportions for image widget and for image
-        k_pixbuf = float(pixbuf.props.height) / pixbuf.props.width
-        k_rect = float(rect.height-2) / (rect.width-2)
-
-        # recalculate new height and width
-        if k_pixbuf < k_rect:
-            newWidth = rect.width-2
-            newHeight = int(newWidth * k_pixbuf)
-        else:
-            newHeight = rect.height - 2
-            newWidth = int(newHeight / k_pixbuf)
+settings = None
 
 
-        if newWidth == 0 or newHeight == 0:
-            return
-
-        if newWidth == pixbuf.props.width and newHeight == pixbuf.props.height:
-            return
-        
-        if rect.width == self.lastWidth and rect.height == self.lastHeight:
-            return
-
-        self.lastWidth = rect.width
-        self.lastHeight = rect.height
-
-        # get internal image pixbuf and check that it not yet have new sizes
-        # that's allow us to avoid endless size_allocate cycle
-        pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(self.path,newWidth,newHeight)
-        self.set_from_pixbuf(pixbuf)
+gtk.rc_parse('/home/frankt/.themes/HighContrast/gtk-2.0/gtkrc')
 
 
+class Settings:
+    def __init__(self):
+        prefs = preferences.preferences()
+
+        self.control_font_name = prefs.getpref('control_font', 'Sans 18', str)
+        self.dro_font_name = prefs.getpref('dro_font', 'Courier 10 Pitch Bold 16', str)
+        self.error_font_name = prefs.getpref('error_font', 'Sans Bold 10', str)
+        self.listing_font_name = prefs.getpref('listing_font', 'Sans 10', str)
+        self.theme_name = prefs.getpref('gtk_theme', 'Follow System Theme', str)
+
+        self.control_font = pango.FontDescription(self.control_font_name)
 
 class HandlerClass:
     '''
@@ -87,8 +53,10 @@ class HandlerClass:
         self.halcomp = halcomp
         self.builder = builder
         self.prelude = gwiz_path + os.sep + "prelude.ngc"
-        global pxCalc
-        pxCalc = gtk.gdk.pixbuf_new_from_file_at_size(gwiz_path+os.sep+"img/calc.png",calcSize,calcSize)
+        #global pxCalc
+        #pxCalc = gtk.gdk.pixbuf_new_from_file_at_size(gwiz_path+os.sep+"img/calc.png",calcSize,calcSize)
+
+        self.load_preferences()
 
         self.load_wizards()
         self.build_screens()
@@ -154,10 +122,11 @@ class HandlerClass:
 
             btnbar = gtk.HButtonBox()
             btn1 = gtk.Button("Run")
+            btn1.set_size_request(150, 100)
             btn1.connect("button-press-event",self.on_run, w)
             btnbar.pack_start(btn1)
             
-            vbox.pack_start(btnbar,expand=False, fill=False)
+            vbox.pack_start(btnbar,expand=True, fill=True)
 
             lbl = gtk.Label(w.desc_name)
             nb.append_page( vbox, lbl ) 
@@ -165,6 +134,14 @@ class HandlerClass:
             mainwin = self.builder.get_object("window1")
             mainwin.show_all()
 
+
+    def load_preferences(self):
+        global settings
+        settings = Settings()
+
+        #gtksettings = gtk.settings_get_default()
+        #gtksettings.set_string_property("gtk-theme-name", settings.theme_name, "")
+ 
 
     # run as program
     def on_run_program(self, btn, event, w):
@@ -213,10 +190,7 @@ class HandlerClass:
 
 def find_widget(w,child_name):
 
-    print w
-    print w.get_name()
     for c in w.get_children():
-        print (c.get_name(),child_name)
         if c.get_name() == child_name:
             return c
         else:
@@ -265,6 +239,8 @@ class FloatConfig:
         self.spin.set_range(-100000, 100000)
         self.spin.set_value( float(self.defaultValue) )
         self.spin.set_increments(0.1, 10)
+        self.spin.connect("button-press-event",self.on_calc_click,self.name,self.spin)
+
         hbox.pack_start(self.spin)
 
         if self.axis != '':
@@ -273,13 +249,13 @@ class FloatConfig:
                         self.axis, self.spin)
             table.attach( btn, 0, 1, row, row+1)
 
-        btn = gtk.Button()
-        imgCalc = gtk.Image()
-        global pxCalc
-        imgCalc.set_from_pixbuf(pxCalc)
-        btn.set_image(imgCalc)
-        btn.connect("button-press-event",self.on_calc_click,self.name,self.spin)
-        hbox.pack_start(btn, expand=False, fill=False)
+        #btn = gtk.Button()
+        #imgCalc = gtk.Image()
+        #global pxCalc
+        #imgCalc.set_from_pixbuf(pxCalc)
+        #btn.set_image(imgCalc)
+        #btn.connect("button-press-event",self.on_calc_click,self.name,self.spin)
+        #hbox.pack_start(btn, expand=False, fill=False)
         table.attach( hbox, 2, 3, row, row+1)
 
     def on_press_copy_axis(self, btn, event, axis, spinbox):
@@ -329,13 +305,13 @@ class UintConfig:
         self.spin.set_value( float(self.defaultValue) )
         hbox.pack_start(self.spin)
 
-        btn = gtk.Button()
-        imgCalc = gtk.Image()
-        global pxCalc
-        imgCalc.set_from_pixbuf(pxCalc)
-        btn.set_image(imgCalc)
-        btn.connect("button-press-event",self.on_calc_click,self.name,self.spin)
-        hbox.pack_start(btn, expand=False, fill=False)
+        #btn = gtk.Button()
+        #imgCalc = gtk.Image()
+        #global pxCalc
+        #imgCalc.set_from_pixbuf(pxCalc)
+        #btn.set_image(imgCalc)
+        #btn.connect("button-press-event",self.on_calc_click,self.name,self.spin)
+        #hbox.pack_start(btn, expand=False, fill=False)
         table.attach( hbox, 2, 3, row, row+1)
 
     def on_calc_click(self,btn,ev,axis,spin):
@@ -457,77 +433,5 @@ class Wizard:
 
         # config, desc, screen.png, ngc, version
         return Wizard(path, config, desc, image, subroutine)
-
-
-class CalculatorDialog(gtk.Dialog):
-
-    def __init__(self, *args, **kwargs):
-        super(CalculatorDialog, self).__init__(*args, **kwargs)
-
-        self.builder = gtk.Builder()
-        self.builder.add_from_file(gwiz_path+os.sep+"calc.ui")
-        self.dialog = self.builder.get_object("dialogCalc")
-        self.dialog.set_modal(True)
-        print self.dialog
-        self.value = ""
-
-        self.builder.get_object("buttonCalcSqrt").connect("button-press-event", self.on_button_press,'sqrt')
-        self.builder.get_object("buttonCalcSquare").connect("button-press-event", self.on_button_press,'sqr')
-        self.builder.get_object("buttonCalcReciprical").connect("button-press-event", self.on_button_press,'recip')
-        self.builder.get_object("buttonCalcDivide").connect("button-press-event", self.on_button_press,'/')
-        self.builder.get_object("buttonCalc7").connect("button-press-event", self.on_button_press,'7')
-        self.builder.get_object("buttonCalc8").connect("button-press-event", self.on_button_press,'8')
-        self.builder.get_object("buttonCalc9").connect("button-press-event", self.on_button_press,'9')
-        self.builder.get_object("buttonCalcMultiply").connect("button-press-event", self.on_button_press,'*')
-        self.builder.get_object("buttonCalc4").connect("button-press-event", self.on_button_press,'4')
-        self.builder.get_object("buttonCalc5").connect("button-press-event", self.on_button_press,'5')
-        self.builder.get_object("buttonCalc6").connect("button-press-event", self.on_button_press,'6')
-        self.builder.get_object("buttonCalcMinus").connect("button-press-event", self.on_button_press,'-')
-        self.builder.get_object("buttonCalc1").connect("button-press-event", self.on_button_press,'1')
-        self.builder.get_object("buttonCalc2").connect("button-press-event", self.on_button_press,'2')
-        self.builder.get_object("buttonCalc3").connect("button-press-event", self.on_button_press,'3')
-        self.builder.get_object("buttonCalcPlus").connect("button-press-event", self.on_button_press,'+')
-        self.builder.get_object("buttonCalcPlusMinus").connect("button-press-event", self.on_button_press,'-')
-        self.builder.get_object("buttonCalc0").connect("button-press-event", self.on_button_press,'0')
-        self.builder.get_object("buttonCalcDP").connect("button-press-event", self.on_button_press,'.')
-        self.builder.get_object("buttonCalcEquals").connect("button-press-event", self.on_button_press,'=')
-        self.builder.get_object("buttonCalcOpenParenthesis").connect("button-press-event", self.on_button_press,'(')
-        self.builder.get_object("buttonCalcCloseParenthesis").connect("button-press-event", self.on_button_press,')')
-        self.builder.get_object("buttonCalcPi").connect("button-press-event", self.on_button_press,'math.pi')
-        self.builder.get_object("buttonCalcClear").connect("button-press-event", self.on_button_press,'C')
-
-    def on_button_press(self, widget, event, key):
-
-        entry = self.builder.get_object( "calcDisplay" )
-        text = entry.get_text()
-    
-        if key == "C":
-            text = ""
-        elif key in ( "sqrt", "sqr", "recip", "/", "*", "-", "+", "-", ".", "-", "(", ")", "math.pi", "C"):
-            if key in ( "/", "*", "-", "+", "-", ".", "-", "(", ")", "math.pi"):
-                text = text + key
-        elif key == "=":
-            text = eval(text)
-        else:
-            text = text + key
-    
-        entry.set_text( str(text) )
-
-    def run(self,parent,axis,value):
-
-        lbl = self.builder.get_object("labelCalcTitle")
-        lbl.set_label( "Set coordinate for %s" % axis)
-        entry = self.builder.get_object("calcDisplay")
-        entry.set_text( value )
-        ret = False
-        #self.dialog.set_transient_for(spin)
-        if self.dialog.run() == 1:
-            self.value = entry.get_text()
-            ret = True
-        self.dialog.hide()
-        return ret
-
-    def get_value(self):
-        return self.value
 
 
