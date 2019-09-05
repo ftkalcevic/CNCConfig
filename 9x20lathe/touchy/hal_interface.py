@@ -191,7 +191,7 @@ class hal_interface:
         self.wn = wn
 
         quillup = self.c["quill-up"]
-        if quillup and not self.quillup: 
+        if quillup and not self.quillup:
             self.emc_control.quill_up()
         self.quillup = quillup
 
