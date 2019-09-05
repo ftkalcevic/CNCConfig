@@ -1,0 +1,138 @@
+# High-Contrast, "Normal Size" Theme
+#
+# Original gtkrc by Bill Haneman, based on Standard theme by T. Liebeck,
+# which was in turn based on lots of different gtkrc files but
+# primarily the one for the metal theme.
+#
+# High-contrast pixmap icons by jimmac with input from tigert.
+
+style "default"
+{
+  engine "hcengine" {
+    edge_thickness = 2
+  }
+
+  xthickness = 2
+  ythickness = 2
+
+  EelEditableLabel::cursor_aspect_ratio = 0.1
+  EelEditableLabel::cursor_color    = "#cc0000"
+
+  GtkEntry::cursor_color    = "#cc0000"
+  GtkEntry::cursor_aspect_ratio = 0.1
+
+  GtkHSV::focus-line-pattern = "\0"
+
+  GtkTextView::cursor_aspect_ratio = 0.1
+  GtkTextView::cursor_color    = "#cc0000"
+
+  GtkTreeView::expander-size = 16
+
+  GtkWidget::focus-line-pattern = "\4\2"
+  GtkWidget::focus-line-width = 2
+  GtkWidget::focus-padding = 0
+  GtkWidget::interior_focus = 1
+  GtkWidget::link-color = "#000060"
+  GtkWidget::visited-link-color = "#600000"
+
+
+  # Nautilus
+  NautilusIconContainer::frame_text = 1
+
+  # Pidgin
+  GtkIMHtml::hyperlink-color = "#000060"
+  GtkIMHtml::hyperlink-visited-color = "#600000"
+  GtkIMHtml::hyperlink-prelight-color = "#404080"
+
+  # Evolution
+  GtkHTML::link_color = "#000060"
+  GtkHTML::vlink_color = "#600000"
+  GtkHTML::cite_color = "#003000"
+
+  fg[NORMAL]      = "#000000"
+  text[NORMAL]    = "#000000"
+  bg[NORMAL]      = "#ffffff"
+  base[NORMAL]    = "#ffffff"
+
+  fg[INSENSITIVE]      = "#999999"
+  text[INSENSITIVE]    = "#999999"
+  bg[INSENSITIVE]      = "#ccccff"
+  base[INSENSITIVE]    = "#ccccff"
+
+  fg[PRELIGHT]    = "#ccccff"
+  text[PRELIGHT]  = "#ccccff"
+  bg[PRELIGHT]    = "#000000"
+  base[PRELIGHT]  = "#000000"
+
+  fg[ACTIVE]      = "#000000"
+  text[ACTIVE]    = "#000000"
+  bg[ACTIVE]      = "#b8b891"
+  base[ACTIVE]    = "#b8b891"
+
+  fg[SELECTED]    = "#ffffff"
+  text[SELECTED]  = "#ffffff"
+  bg[SELECTED]    = "#000000"
+  base[SELECTED]  = "#333300"
+
+  font_name = "Smooth 15"
+}
+
+class "GtkWidget" style "default"
+
+style "red" {
+  bg[ACTIVE]      = "#ff0000"
+}
+
+style "blue" {
+  bg[ACTIVE]      = "#7F7FFF"
+}
+
+style "green" {
+  bg[ACTIVE]      = "#00ff00"
+}
+
+style "orange" {
+  bg[ACTIVE]      = "#FF6A00"
+}
+
+style "mpg.red" {
+
+  bg[NORMAL]      = "#FFB2B3"
+  bg[INSENSITIVE] = "#FFD8D9"
+  bg[PRELIGHT]    = "#ff0000"
+  bg[ACTIVE]      = "#ff0000"
+  bg[SELECTED]    = "#ff0000"
+}
+
+style "spindle-slider" {
+  GtkScale::slider-length   = 130
+  GtkRange::slider-width   = 130
+  #GtkRange::stepper-size = 20
+  GtkRange::trough-border = 20
+  #GtkRange::trough-side-details = 20
+  #GtkRange::trough-under-steppers = -20
+  GtkRange::activate-slider = 1
+
+ }
+
+style "calculator" {
+
+  bg[NORMAL]      = "#FFB2B3"
+  bg[INSENSITIVE] = "#FFD8D9"
+  bg[PRELIGHT]    = "#ff0000"
+  bg[ACTIVE]      = "#ff0000"
+  bg[SELECTED]    = "#ff0000"
+}
+
+
+#widget "MainWindow.vbox5.hbox5.wheel.alignment3.vbox4.vbox3.so" style "red"
+#widget "MainWindow.*.so" style "red"
+#widget "*.so" style "red"
+widget "*.fo" style "blue"
+widget "*.so" style "green"
+widget "*.mv" style "orange"
+widget "*.jogging" style "red"
+
+widget "*.vscaleSpindleSpeed" style "spindle-slider"
+
+class "GtkDialog" style "calculator"

@@ -28,7 +28,7 @@ debug = False
 settings = None
 
 
-gtk.rc_parse('/home/frankt/.themes/HighContrast/gtk-2.0/gtkrc')
+gtk.rc_parse('/home/frankt/linuxcnc/9x20lathe/touchy/theme/HighContrastFT/gtk-2.0/gtkrc')
 
 
 class Settings:

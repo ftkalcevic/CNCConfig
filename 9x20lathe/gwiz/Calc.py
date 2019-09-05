@@ -61,9 +61,9 @@ class CalculatorDialog(gtk.Dialog):
         elif key in ( "[x]", "[z]" ):
 
             status = linuxcnc.stat()
+            lathe = not (status.axis_mask & 2)
             status.poll()
             p = status.position
-
 
             i  = 0
             if key == "[x]":
@@ -72,6 +72,11 @@ class CalculatorDialog(gtk.Dialog):
                 i = 2
  
             pos = p[i] - status.g5x_offset[i] - status.tool_offset[i]
+            if i == 0:
+                # radius/diameter
+                    if not 80 in status.gcodes:
+                        pos = pos*2
+
             text = text + str(pos)
 
         elif key in ( "recip", "/", "*", "-", "+", "-", ".", "-", "(", ")", "math.pi", "C"):
@@ -91,7 +96,9 @@ class CalculatorDialog(gtk.Dialog):
         entry = self.builder.get_object("calcDisplay")
         entry.set_text( value )
         ret = False
-        #self.dialog.set_transient_for(spin)
+
+        self.dialog.set_transient_for(parent.get_toplevel())
+        self.dialog.set_modal(True)
         if self.dialog.run() == 1:
             self.value = entry.get_text()
             ret = True

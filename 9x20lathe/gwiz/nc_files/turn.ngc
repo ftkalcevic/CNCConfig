@@ -16,9 +16,16 @@ O<turn> sub (outside diameter turning)
     (start/end dia)
     #<xPos> = #5420
     #<xFinish> = [#<xPos> - #<stepX>]
+    o15 if [ #<_lathe_diameter_mode> EQ 1 ]
+        #<xPos> = [2 * #<xPos>]
+        #<xFinish> = [2 * #<xFinish>]
+    o15 endif
 
+    (print, xpos #<xPos>)
+    (print, xFinish #<xFinish>)
 
     (Make sure spindle is on)
+    S10
     M3
 
     (rapid to start)

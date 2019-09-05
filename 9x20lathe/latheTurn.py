@@ -17,6 +17,7 @@ from touchy import preferences
 
 debug = False
 
+gtk.rc_parse('/home/frankt/linuxcnc/9x20lathe/touchy/theme/HighContrastFT/gtk-2.0/gtkrc')
 
 class SpindleState:
     Stopped = 0
@@ -87,32 +88,28 @@ class HandlerClass:
             widget = self.builder.get_object(widget_name)
             widget.set_value( value )
 
+    def DoTouchoff( self, widget, axis, index ):
+        status = linuxcnc.stat()
+        status.poll()
+
+        pos = status.position[index] - status.g5x_offset[index] - status.tool_offset[index]
+        if index == 0:
+            # radius/diameter
+            if not 80 in status.gcodes:
+                pos = pos*2
+
+        dialog = CalculatorDialog()
+        if dialog.run(widget.get_toplevel(), "Touch off " + axis, str(pos) ):
+            new = float(dialog.get_value())
+            cmd = "G10 L20 P0 %s%s" % (axis,new)
+            ensure_mode(linuxcnc.MODE_MDI)
+            linuxcnc.command().mdi(cmd)
 
     def on_btnTouchOffX_pressed(self,w):
-        status = linuxcnc.stat()
-        status.poll()
-        pos = status.position
-
-        dialog = CalculatorDialog()
-        if dialog.run(w.get_parent(), "Touch off X", str(pos[0]) ):
-            new_x = float(dialog.get_value())
-            cmd = "G10 L20 P0 X%s" % new_x
-            ensure_mode(linuxcnc.MODE_MDI)
-            linuxcnc.command().mdi(cmd)
-
+        self.DoTouchoff( w, "X", 0 )
 
     def on_btnTouchOffZ_pressed(self,w):
-        status = linuxcnc.stat()
-        status.poll()
-        pos = status.position
-
-        dialog = CalculatorDialog()
-        if dialog.run(w.get_parent(), "Touch off Z", str(pos[2]) ):
-            new_z = float(dialog.get_value())
-            cmd = "G10 L20 P0 Z%s" % new_z
-            ensure_mode(linuxcnc.MODE_MDI)
-            linuxcnc.command().mdi(cmd)
-
+        self.DoTouchoff( w, "Z", 2 )
 
     def on_btnRun_pressed(self,w):
         cmd = "O<turn> call [%s] [%s] [%s] [%s] [%s]" % ( 
@@ -125,25 +122,25 @@ class HandlerClass:
         ensure_mode(linuxcnc.MODE_MDI)
         linuxcnc.command().mdi(cmd)
 
-    def DoCalculator(self, spin):
+    def DoCalculator(self, spin, desc):
         dialog = CalculatorDialog()
-        if dialog.run(spin.get_parent(), "", str(spin.get_value()) ):
+        if dialog.run(spin.get_parent(), desc, str(spin.get_value()) ):
             spin.set_value( float(dialog.get_value()) )
 
     def on_spinZStart_button_press_event(self,w,d):
-        self.DoCalculator(w)
+        self.DoCalculator(w,"Z Start")
 
     def on_spinZFeed_button_press_event(self,w,d):
-        self.DoCalculator(w)
+        self.DoCalculator(w,"Z Feed")
 
     def on_spinSFM_button_press_event(self,w,d):
-        self.DoCalculator(w)
+        self.DoCalculator(w,"SFM")
 
     def on_spinXStep_button_press_event(self,w,d):
-        self.DoCalculator(w)
+        self.DoCalculator(w,"X Step")
 
     def on_spinZEnd_button_press_event(self,w,d):
-        self.DoCalculator(w)
+        self.DoCalculator(w,"Z End")
 
     def on_btnSpindleStop_toggled(self,w):
         if self.btnSpindleStop.get_active():

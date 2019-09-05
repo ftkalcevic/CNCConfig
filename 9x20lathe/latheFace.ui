@@ -49,7 +49,7 @@
             <child>
               <object class="HAL_VScale" id="vscaleSpindleSpeed">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
+                <property name="can_focus">False</property>
                 <property name="adjustment">adjSpindleSpeed</property>
                 <property name="inverted">True</property>
                 <property name="show_fill_level">True</property>
@@ -75,7 +75,7 @@
                     <property name="width_request">150</property>
                     <property name="height_request">150</property>
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="can_focus">False</property>
                     <property name="receives_default">True</property>
                     <property name="use_action_appearance">False</property>
                     <property name="draw_indicator">False</property>
@@ -93,7 +93,7 @@
                     <property name="width_request">120</property>
                     <property name="height_request">80</property>
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="can_focus">False</property>
                     <property name="receives_default">True</property>
                     <property name="use_action_appearance">False</property>
                     <property name="draw_indicator">False</property>
@@ -111,7 +111,7 @@
                     <property name="width_request">120</property>
                     <property name="height_request">80</property>
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="can_focus">False</property>
                     <property name="receives_default">True</property>
                     <property name="use_action_appearance">False</property>
                     <property name="draw_indicator">False</property>
@@ -151,7 +151,7 @@
                     <property name="width_request">230</property>
                     <property name="height_request">130</property>
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="can_focus">False</property>
                     <property name="receives_default">True</property>
                     <property name="use_action_appearance">False</property>
                     <signal name="pressed" handler="on_btnRun_pressed" swapped="no"/>
@@ -239,7 +239,7 @@
             <child>
               <object class="GtkSpinButton" id="spinXStart">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
+                <property name="can_focus">False</property>
                 <property name="editable">False</property>
                 <property name="invisible_char">●</property>
                 <property name="invisible_char_set">True</property>
@@ -260,7 +260,7 @@
             <child>
               <object class="GtkSpinButton" id="spinXEnd">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
+                <property name="can_focus">False</property>
                 <property name="editable">False</property>
                 <property name="invisible_char">●</property>
                 <property name="invisible_char_set">True</property>
@@ -283,7 +283,7 @@
             <child>
               <object class="GtkSpinButton" id="spinZStep">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
+                <property name="can_focus">False</property>
                 <property name="editable">False</property>
                 <property name="invisible_char">●</property>
                 <property name="invisible_char_set">True</property>
@@ -306,7 +306,7 @@
             <child>
               <object class="GtkSpinButton" id="spinSFM">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
+                <property name="can_focus">False</property>
                 <property name="editable">False</property>
                 <property name="invisible_char">●</property>
                 <property name="invisible_char_set">True</property>
@@ -331,7 +331,7 @@
                 <property name="width_request">150</property>
                 <property name="height_request">130</property>
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
+                <property name="can_focus">False</property>
                 <property name="receives_default">True</property>
                 <property name="use_action_appearance">False</property>
                 <signal name="pressed" handler="on_btnTouchOffX_pressed" swapped="no"/>
@@ -358,7 +358,7 @@ mm/rev</property>
             <child>
               <object class="GtkSpinButton" id="spinXFeed">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
+                <property name="can_focus">False</property>
                 <property name="editable">False</property>
                 <property name="invisible_char">●</property>
                 <property name="primary_icon_activatable">False</property>
@@ -396,7 +396,7 @@ mm/rev</property>
                 <property name="width_request">150</property>
                 <property name="height_request">130</property>
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
+                <property name="can_focus">False</property>
                 <property name="receives_default">True</property>
                 <property name="use_action_appearance">False</property>
                 <signal name="pressed" handler="on_btnTouchOffZ_pressed" swapped="no"/>

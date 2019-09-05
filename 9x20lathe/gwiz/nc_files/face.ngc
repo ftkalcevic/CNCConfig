@@ -11,6 +11,7 @@ O<face> sub (outside facing on the lathe)
     (verify parameters)
 
     (Make sure spindle is on)
+    S10
     M3
 
     #<zPos> = #5422
