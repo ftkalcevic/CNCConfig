@@ -380,6 +380,7 @@ class touchy:
                         "on_wheelinc1_clicked" : self.wheelinc1,
                         "on_wheelinc2_clicked" : self.wheelinc2,
                         "on_wheelinc3_clicked" : self.wheelinc3,
+                        "on_quit_clicked" : self.on_quit,
                         "on_override_limits_clicked" : self.linuxcnc.override_limits,
                         "on_spindle_forward_clicked" : self.linuxcnc.spindle_forward,
                         "on_spindle_off_clicked" : self.linuxcnc.spindle_off,
@@ -569,6 +570,20 @@ class touchy:
                 self.linuxcnc.jogging(b)
                 self.jogsettings_activate(1)
 
+        def on_quit(self,b):
+                dialog = gtk.Dialog("Confirm Close",
+                     b.get_toplevel(),
+                     gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                     (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
+                      gtk.STOCK_OK, gtk.RESPONSE_ACCEPT))
+                label = gtk.Label("Do you really want to close LinuxCNC?")
+                dialog.vbox.pack_start(label)
+                label.show()
+                ret = dialog.run()
+                dialog.destroy()
+                if ret == gtk.RESPONSE_ACCEPT:
+                    gtk.main_quit()
+
         def toolset_fixture(self, b):
                 if self.radiobutton_mask: return
                 self.prefs.putpref('toolsetting_fixture', 1)
@@ -630,7 +645,7 @@ class touchy:
                           "8", "9", "0", "minus", "decimal",
                           "flood_on", "flood_off", "mist_on", "mist_off",
                           "g", "gp", "m", "t", "set_tool", "set_origin", "macro",
-                          "estop", "estop_reset", "machine_off", "machine_on",
+                          "estop", "estop_reset", "machine_off", "machine_on", "quit",
                           "home_all", "unhome_all", "home_selected", "unhome_selected",
                           "mpgoff", "fo", "so", "mv", "jogging", "scrolling", "wheelinc1", "wheelinc2", "wheelinc3",
                           "wheelx", "wheely", "wheelz",

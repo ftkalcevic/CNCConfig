@@ -74,7 +74,7 @@ style "default"
   bg[SELECTED]    = "#000000"
   base[SELECTED]  = "#333300"
 
-  font_name = "Smooth 15"
+  font_name = "Smooth 12"
 }
 
 class "GtkWidget" style "default"
