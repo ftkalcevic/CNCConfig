@@ -13,24 +13,26 @@
     <property name="step_increment">10</property>
     <property name="page_increment">100</property>
   </object>
-  <object class="GtkAdjustment" id="adjXEnd">
-    <property name="lower">-300</property>
-    <property name="upper">300</property>
+  <object class="GtkAdjustment" id="adjXStep">
+    <property name="lower">0.01</property>
+    <property name="upper">5</property>
+    <property name="value">0.10000000000000001</property>
     <property name="step_increment">0.10000000000000001</property>
     <property name="page_increment">10</property>
   </object>
-  <object class="GtkAdjustment" id="adjXFeed">
+  <object class="GtkAdjustment" id="adjZEnd">
+    <property name="lower">-500</property>
+    <property name="upper">500</property>
+    <property name="value">-10</property>
+    <property name="step_increment">0.10000000000000001</property>
+    <property name="page_increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="adjZFeed">
     <property name="upper">10</property>
     <property name="step_increment">0.10000000000000001</property>
     <property name="page_increment">1</property>
   </object>
-  <object class="GtkAdjustment" id="adjXStart">
-    <property name="lower">-300</property>
-    <property name="upper">300</property>
-    <property name="step_increment">0.10000000000000001</property>
-    <property name="page_increment">10</property>
-  </object>
-  <object class="GtkAdjustment" id="adjZStep">
+  <object class="GtkAdjustment" id="adjZStart">
     <property name="lower">-500</property>
     <property name="upper">500</property>
     <property name="step_increment">0.10000000000000001</property>
@@ -194,7 +196,7 @@
                 <property name="height_request">80</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">X Start</property>
+                <property name="label" translatable="yes">Z Start</property>
               </object>
             </child>
             <child>
@@ -203,7 +205,7 @@
                 <property name="height_request">80</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">X End</property>
+                <property name="label" translatable="yes">Z End</property>
               </object>
               <packing>
                 <property name="top_attach">1</property>
@@ -216,7 +218,7 @@
                 <property name="height_request">80</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Z Step</property>
+                <property name="label" translatable="yes">X Step</property>
               </object>
               <packing>
                 <property name="top_attach">3</property>
@@ -237,7 +239,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkSpinButton" id="spinXStart">
+              <object class="GtkSpinButton" id="spinZStart">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="editable">False</property>
@@ -247,10 +249,10 @@
                 <property name="secondary_icon_activatable">False</property>
                 <property name="primary_icon_sensitive">True</property>
                 <property name="secondary_icon_sensitive">True</property>
-                <property name="adjustment">adjXStart</property>
+                <property name="adjustment">adjZStart</property>
                 <property name="digits">3</property>
                 <property name="numeric">True</property>
-                <signal name="button-press-event" handler="on_spinXStart_button_press_event" swapped="no"/>
+                <signal name="button-press-event" handler="on_spinZStart_button_press_event" swapped="no"/>
               </object>
               <packing>
                 <property name="left_attach">1</property>
@@ -258,7 +260,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkSpinButton" id="spinXEnd">
+              <object class="GtkSpinButton" id="spinZEnd">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="editable">False</property>
@@ -268,10 +270,10 @@
                 <property name="secondary_icon_activatable">False</property>
                 <property name="primary_icon_sensitive">True</property>
                 <property name="secondary_icon_sensitive">True</property>
-                <property name="adjustment">adjXEnd</property>
+                <property name="adjustment">adjZEnd</property>
                 <property name="digits">3</property>
                 <property name="numeric">True</property>
-                <signal name="button-press-event" handler="on_spinXEnd_button_press_event" swapped="no"/>
+                <signal name="button-press-event" handler="on_spinZEnd_button_press_event" swapped="no"/>
               </object>
               <packing>
                 <property name="left_attach">1</property>
@@ -281,7 +283,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkSpinButton" id="spinZStep">
+              <object class="GtkSpinButton" id="spinXStep">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="editable">False</property>
@@ -291,10 +293,10 @@
                 <property name="secondary_icon_activatable">False</property>
                 <property name="primary_icon_sensitive">True</property>
                 <property name="secondary_icon_sensitive">True</property>
-                <property name="adjustment">adjZStep</property>
+                <property name="adjustment">adjXStep</property>
                 <property name="digits">3</property>
                 <property name="numeric">True</property>
-                <signal name="button-press-event" handler="on_spinZStep_button_press_event" swapped="no"/>
+                <signal name="button-press-event" handler="on_spinXStep_button_press_event" swapped="no"/>
               </object>
               <packing>
                 <property name="left_attach">1</property>
@@ -347,7 +349,7 @@
               <object class="GtkLabel" id="label5">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">X Feed
+                <property name="label" translatable="yes">Z Feed
 mm/rev</property>
               </object>
               <packing>
@@ -356,7 +358,7 @@ mm/rev</property>
               </packing>
             </child>
             <child>
-              <object class="GtkSpinButton" id="spinXFeed">
+              <object class="GtkSpinButton" id="spinZFeed">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="editable">False</property>
@@ -365,10 +367,10 @@ mm/rev</property>
                 <property name="secondary_icon_activatable">False</property>
                 <property name="primary_icon_sensitive">True</property>
                 <property name="secondary_icon_sensitive">True</property>
-                <property name="adjustment">adjXFeed</property>
+                <property name="adjustment">adjZFeed</property>
                 <property name="digits">3</property>
                 <property name="numeric">True</property>
-                <signal name="button-press-event" handler="on_spinXFeed_button_press_event" swapped="no"/>
+                <signal name="button-press-event" handler="on_spinZFeed_button_press_event" swapped="no"/>
               </object>
               <packing>
                 <property name="left_attach">1</property>

@@ -2,17 +2,13 @@ O<face> sub (outside facing on the lathe)
     #<startX> = #1
     #<endX> = #2
     #<stepZ> = #3
-    #<sfm> = #4
+    #<feed> = #4
+    #<sfm> = #5
     
     #<maxrpm> = 1200
     #<clearance> = 2
-    #<feed> = 0.1
 
     (verify parameters)
-
-    (CSS mode)
-    #<mpm> = [#<sfm> * 12 * 25.4/1000]
-    G96 D#<maxrpm> S#<mpm>
 
     (Make sure spindle is on)
     M3
@@ -20,15 +16,28 @@ O<face> sub (outside facing on the lathe)
     #<zPos> = #5422
     #<zFinish> = [#<zPos> - #<stepZ>]
 
+    (Optional pause)
 	M1
-        G0 X#<startX>
-        G0 Z#<zFinish> 
-        G33 X#<endX> K#<feed>
-        G0 Z[#<zFinish>+#<clearance>]
-        G0 X[#<endX> + #<clearance>]
-        G0 Z#<zFinish>
-        
+
+    (Move to start position)
+    G0 X#<startX>
+    G0 Z#<zFinish> 
+
+    (CSS mode)
+    #<mpm> = [#<sfm> * 12 * 25.4/1000]
+    G96 D#<maxrpm> S#<mpm>
+
+    (cut)
+    G33 X#<endX> K#<feed>
+
     (rpm mode)
     G97
 
+    (retract ready for another cut)
+    G0 Z[#<zFinish>+#<clearance>] X[#<endX> + #<clearance>]
+    G0 X#<startX>
+    G0 Z#<zFinish>
+
+    (Spindle stop)
+    M5
 O<face> endsub

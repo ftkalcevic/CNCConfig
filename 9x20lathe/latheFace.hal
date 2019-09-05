@@ -1,14 +1,1 @@
-#gladevcpFace.btnRun
-#gladevcpFace.btnRun-not
-#gladevcpFace.btnSpindleForward
-#gladevcpFace.btnSpindleForward-not
-#gladevcpFace.btnSpindleReverse
-#gladevcpFace.btnSpindleReverse-not
-#gladevcpFace.btnSpindleStop
-#gladevcpFace.btnSpindleStop-not
-#gladevcpFace.vscaleSpindleSpeed
-#gladevcpFace.vscaleSpindleSpeed-s
-
-
-#net spindle_speed gladevcpFace.vscaleSpindleSpeed => 
-
+net estop-link => gladevcpFace.hbox1

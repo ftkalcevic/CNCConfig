@@ -50,7 +50,7 @@ class HandlerClass:
         self.builder = builder
 
         img = ImageEx()
-        img.set_from_file( "latheFace.svg" )
+        img.set_from_file( "latheTurn.svg" )
         vbox = builder.get_object("vboxImage")
         vbox.pack_start(img)
         vbox.reorder_child(img,0)
@@ -78,10 +78,10 @@ class HandlerClass:
         
 
     def load_defaults(self):
-        params = (  ( "spinXStart", 15 ),
-                    ( "spinXEnd", -1 ),
-                    ( "spinXFeed", 0.1 ),
-                    ( "spinZStep", 0.25 ),
+        params = (  ( "spinZStart", 1 ),
+                    ( "spinZEnd", -10 ),
+                    ( "spinZFeed", 0.1 ),
+                    ( "spinXStep", 0.25 ),
                     ( "spinSFM", 100 ) )
         for widget_name,value in params:
             widget = self.builder.get_object(widget_name)
@@ -115,11 +115,11 @@ class HandlerClass:
 
 
     def on_btnRun_pressed(self,w):
-        cmd = "O<face> call [%s] [%s] [%s] [%s] [%s]" % ( 
-                    self.builder.get_object("spinXStart").get_value(),
-                    self.builder.get_object("spinXEnd").get_value(),
-                    self.builder.get_object("spinXFeed").get_value(),
-                    self.builder.get_object("spinZStep").get_value(),
+        cmd = "O<turn> call [%s] [%s] [%s] [%s] [%s]" % ( 
+                    self.builder.get_object("spinZStart").get_value(),
+                    self.builder.get_object("spinZEnd").get_value(),
+                    self.builder.get_object("spinZFeed").get_value(),
+                    self.builder.get_object("spinXStep").get_value(),
                     self.builder.get_object("spinSFM").get_value() )
         print cmd
         ensure_mode(linuxcnc.MODE_MDI)
@@ -130,19 +130,19 @@ class HandlerClass:
         if dialog.run(spin.get_parent(), "", str(spin.get_value()) ):
             spin.set_value( float(dialog.get_value()) )
 
-    def on_spinXStart_button_press_event(self,w,d):
+    def on_spinZStart_button_press_event(self,w,d):
         self.DoCalculator(w)
 
-    def on_spinXFeed_button_press_event(self,w,d):
+    def on_spinZFeed_button_press_event(self,w,d):
         self.DoCalculator(w)
 
     def on_spinSFM_button_press_event(self,w,d):
         self.DoCalculator(w)
 
-    def on_spinZStep_button_press_event(self,w,d):
+    def on_spinXStep_button_press_event(self,w,d):
         self.DoCalculator(w)
 
-    def on_spinXEnd_button_press_event(self,w,d):
+    def on_spinZEnd_button_press_event(self,w,d):
         self.DoCalculator(w)
 
     def on_btnSpindleStop_toggled(self,w):
