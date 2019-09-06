@@ -98,6 +98,10 @@ class touchy:
         gtk.rc_parse('/home/frankt/linuxcnc/9x20lathe/theme/HighContrastFT/gtk-2.0/gtkrc')
         self.wTree = gtk.glade.XML(self.gladefile)
 
+        w = gtk.gdk.screen_width()
+        h = gtk.gdk.screen_height()
+        self.wTree.get_widget('MainWindow').move(0,0)
+        self.wTree.get_widget('MainWindow').set_default_size(w,h)
 
 
         for w in ['wheelinc1', 'wheelinc2', 'wheelinc3',
