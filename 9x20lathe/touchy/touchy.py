@@ -600,14 +600,22 @@ class touchy:
         self.prefs.putpref('toolsetting_fixture', 0)
         self.g10l11 = 0
 
+    def set_jogmode(self):
+        pos = self.get_widget_position(self.wheel)
+        if pos == 4:
+            # jog x=pos, jog zpos+1
+            if self.wheelxyz == 2:
+                pos = pos + 1
+        self.hal.jogmode(pos)
+
+
     def jogsettings_activate(self, active):
         for i in ["wheelinc1", "wheelinc2", "wheelinc3"]:
             w = self.wTree.get_widget(i)
             w.set_sensitive(active)
         self.hal.jogactive(active)
-
-        self.hal.jogmode(self.get_widget_position(self.wheel))
-
+        self.set_jogmode()
+        
     def get_widget_position(self, id):
         w = self.wTree.get_widget(id)
         pos =  w.get_parent().child_get_property(w, 'position')
@@ -800,6 +808,7 @@ class touchy:
         else:
             # disable all
             self.hal.jogaxis(-1)
+        self.set_jogmode()
 
         if self.wheel == "scrolling":
             incs = ["100", "10", "1"]

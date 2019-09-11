@@ -1,19 +1,23 @@
 
-loadusr -Wn hidcomp  /home/frankt/src/hidcomp/hidcomp/release/hidcomp -ini /home/frankt/linuxcnc/9x20lathe/9x20lathe.ini /home/frankt/linuxcnc/9x20lathe/lathe-pendant.hid
+loadusr -Wn hidcomp  /home/frankt/src/hidcomp/hidcomp/release/hidcomp -ini /home/frankt/linuxcnc/9x20lathe/9x20lathe.ini /home/frankt/linuxcnc/9x20lathe/lathe-control-panel.hid
 
 
 # touchy required controls
 
 # program stop
-net pendant_stop touchy.abort hidcomp.0.Red.in
+net pendant_stop touchy.abort hidcomp.0.Stop.in
+net is_running <= halui.program.is-running
+net is_running => hidcomp.0.Stop-Light.out
 
 
 # program run
-net pendant_run touchy.cycle-start hidcomp.0.Green.in
+net pendant_run touchy.cycle-start hidcomp.0.Run.in
+net is_running => hidcomp.0.Run-Light.out
 
 
 # program single step
-net pendant_step touchy.single-block hidcomp.0.Amber.in
+net pendant_step touchy.single-block hidcomp.0.Pause.in
+net ispaused => hidcomp.0.Pause-Light.out
 
 # pendant heartbeat
 #loadrt watchdog2
@@ -31,7 +35,7 @@ net joginc => joint.1.jog-scale
 net enjogx touchy.jog.wheel.x => joint.0.jog-enable
 net enjogz touchy.jog.wheel.z => joint.1.jog-enable
 
-net jog-wheel-count hidcomp.0.Jog-Wheel.count
+net jog-wheel-count hidcomp.0.Dial.count
 net jog-wheel-count joint.0.jog-counts
 net jog-wheel-count joint.1.jog-counts
 net jog-wheel-count touchy.wheel-counts
@@ -41,6 +45,16 @@ loadrt watchdog2
 setp watchdog2.0.initial-timeout 10.0
 setp watchdog2.0.timeout 2.0
 net estop-source2 watchdog2.0.out => estop-and.in-01
-net hb_pulse hidcomp.0.Heartbeat.raw => watchdog2.0.in-s32
+net hb_pulse hidcomp.0.Watchdog.raw => watchdog2.0.in-s32
 addf watchdog2.0 servo-thread
-#
+
+# jog mode back light
+loadrt rgblookup mapping="0,0,0;100,0,0;0,100,0;0,0,100;100,100,0;100,0,100;0,100,100;0.1,0.12,0.123;"
+addf rgblookup servo-thread
+
+net jog-mode touchy.jog.mode => rgblookup.index
+net rgb-r rgblookup.ir => hidcomp.0.R.ivalue
+net rgb-g rgblookup.ig => hidcomp.0.G.ivalue
+net rgb-b rgblookup.ib => hidcomp.0.B.ivalue
+
+
