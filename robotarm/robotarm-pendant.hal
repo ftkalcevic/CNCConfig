@@ -1,0 +1,109 @@
+loadusr -Wn hidcomp /home/frankt/git/hidcomp/hidcomp/release/hidcomp -i robotarm.ini robotarm-pendant.hid
+
+loadrt logic names=and5 personality=262
+loadrt pwmgen output_type=0
+loadrt not count=2
+loadrt timedelay
+loadrt mux2 count=7
+loadrt edge
+loadrt conv_float_s32
+loadrt scale
+
+setp mux2.0.in0 0
+setp mux2.1.in0 0
+setp mux2.2.in0 0
+setp mux2.3.in0 0
+setp mux2.4.in0 0
+setp mux2.5.in0 0
+
+# don't jog without a button being pressed.
+net jog-xyz-enable hidcomp.0.XYZButton.in => mux2.0.sel mux2.1.sel mux2.2.sel
+net jog-abc-enable hidcomp.0.RxRyRzButton.in => mux2.3.sel mux2.4.sel mux2.5.sel
+
+net joy-x-jog1 mux2.0.in1 <= hidcomp.0.X.fvalue
+net joy-y-jog1 mux2.1.in1 <= hidcomp.0.Y.fvalue
+net joy-z-jog1 mux2.2.in1 <= hidcomp.0.Z.fvalue
+net joy-a-jog1 mux2.3.in1 <= hidcomp.0.Rx.fvalue
+net joy-b-jog1 mux2.4.in1 <= hidcomp.0.Ry.fvalue
+net joy-c-jog1 mux2.5.in1 <= hidcomp.0.Rz.fvalue
+
+net joy-x-jog mux2.0.out => halui.joint.0.analog
+net joy-y-jog mux2.1.out => halui.joint.1.analog
+net joy-z-jog mux2.2.out => halui.joint.2.analog
+net joy-a-jog mux2.3.out => halui.joint.3.analog
+net joy-b-jog mux2.4.out => halui.joint.4.analog
+net joy-c-jog mux2.5.out => halui.joint.5.analog
+
+net joy-x-jog => halui.axis.x.analog
+net joy-y-jog => halui.axis.y.analog
+net joy-z-jog => halui.axis.z.analog
+net joy-a-jog => halui.axis.a.analog
+net joy-b-jog => halui.axis.b.analog
+net joy-c-jog => halui.axis.c.analog
+
+setp scale.0.in [JOINT_0]MAX_VELOCITY
+setp scale.0.gain 60
+setp scale.0.offset 0
+net jogspeed scale.0.out => halui.axis.jog-speed halui.joint.jog-speed
+setp halui.axis.jog-deadband 0
+setp halui.joint.jog-deadband 0
+
+
+net joint-led hidcomp.0.JointLED.out <= halui.mode.is-joint
+net world-led hidcomp.0.WorldLED.out <= halui.mode.is-teleop
+
+setp mux2.6.in0 1.0
+setp mux2.6.in1 2.0
+net machine_on_ledf mux2.6.out => conv-float-s32.0.in
+net machine_on_ledu conv-float-s32.0.out => hidcomp.0.MachineOn.ivalue
+net machine_mux_sel halui.machine.is-on => mux2.6.sel
+
+# if we aren't homed, flash the home light
+net hand0 halui.joint.0.is-homed => and5.in-00
+net hand1 halui.joint.1.is-homed => and5.in-01
+net hand2 halui.joint.2.is-homed => and5.in-02
+net hand3 halui.joint.3.is-homed => and5.in-03
+net hand4 halui.joint.4.is-homed => and5.in-04
+net hand5 halui.joint.5.is-homed => and5.in-05
+net hand6 and5.and => not.0.in
+net not_hand6 not.0.out => pwmgen.0.enable
+setp pwmgen.0.value 0.5
+setp pwmgen.0.pwm-freq 2
+net homed-led pwmgen.0.pwm => not.1.in
+# invert so light is on when homed
+net not-homed-led not.1.out => hidcomp.0.HomeLED.out
+
+net joint-mode hidcomp.0.Joint.in => halui.mode.joint
+net world-mode hidcomp.0.World.in => halui.mode.teleop
+net home-all hidcomp.0.Home.in => halui.home-all
+
+net estop <= hidcomp.0.E-Stop.in
+net estop => halui.estop.activate
+net estop => halui.machine.off
+net not_estop <= hidcomp.0.E-Stop.in-not
+net not_estop => timedelay.0.in
+net delay_not_estop timedelay.0.out => halui.machine.on
+setp timedelay.0.on-delay 0.1
+setp timedelay.0.off-delay 0.1
+net not_estop => edge.0.in
+net estop_reset_edge edge.0.out => halui.estop.reset
+setp edge.0.in-edge 0
+setp edge.0.out-width-ns 100000000
+
+
+addf and5 servo-thread
+addf not.0 servo-thread
+addf not.1 servo-thread
+addf pwmgen.make-pulses servo-thread
+addf pwmgen.update servo-thread
+addf timedelay.0 servo-thread
+addf mux2.0 servo-thread
+addf mux2.1 servo-thread
+addf mux2.2 servo-thread
+addf mux2.3 servo-thread
+addf mux2.4 servo-thread
+addf mux2.5 servo-thread
+addf mux2.6 servo-thread
+addf edge.0 servo-thread
+addf conv-float-s32.0 servo-thread
+addf scale.0 servo-thread

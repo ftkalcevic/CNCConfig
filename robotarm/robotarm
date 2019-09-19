@@ -1,0 +1,2 @@
+. ~/linuxcnc-dev/scripts/rip-environment
+linuxcnc /home/frankt/linuxcnc/configs/robotarm/robotarm.ini
