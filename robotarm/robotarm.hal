@@ -40,6 +40,8 @@ loadrt [HOSTMOT2](DRIVER) config=[HOSTMOT2](CONFIG)
 # load estop latch component
 loadrt estop_latch
 
+loadrt differential names=diffElbow,diffWrist
+
 # ################################################
 # THREADS
 # ################################################
@@ -50,7 +52,8 @@ addf motion-controller                    servo-thread
 # revel in the free time here from not having to run PID 
 addf hm2_[HOSTMOT2](BOARD).0.write        servo-thread
 addf estop-latch.0                        servo-thread
-       
+addf diffElbow                            servo-thread 
+addf diffWrist                            servo-thread 
 
 # ######################################################
 # Axis-of-motion Specific Configs (not the GUI)
@@ -58,7 +61,7 @@ addf estop-latch.0                        servo-thread
 
 
 # ################
-# X [0] Axis
+# Base Joint [0]
 # ################
 
 # axis enable chain
@@ -66,35 +69,34 @@ newsig emcmot.00.enable bit
 sets emcmot.00.enable FALSE
 
 net emcmot.00.enable <= joint.0.amp-enable-out 
-net emcmot.00.enable => hm2_[HOSTMOT2](BOARD).0.stepgen.00.enable
-net emcmot.00.enable => hm2_[HOSTMOT2](BOARD).0.gpio.051.out
+net emcmot.00.enable => hm2_[HOSTMOT2](BOARD).0.stepgen.03.enable
 
 
 # position command and feedback
 net emcmot.00.pos-cmd <= joint.0.motor-pos-cmd
-net emcmot.00.pos-cmd => hm2_[HOSTMOT2](BOARD).0.stepgen.00.position-cmd
+net emcmot.00.pos-cmd => hm2_[HOSTMOT2](BOARD).0.stepgen.03.position-cmd
 
-net motor.00.pos-fb <= hm2_[HOSTMOT2](BOARD).0.stepgen.00.position-fb
+net motor.00.pos-fb <= hm2_[HOSTMOT2](BOARD).0.stepgen.03.position-fb
 net motor.00.pos-fb => joint.0.motor-pos-fb
 
 
 # timing parameters
-setp hm2_[HOSTMOT2](BOARD).0.stepgen.00.dirsetup        [JOINT_0]DIRSETUP
-setp hm2_[HOSTMOT2](BOARD).0.stepgen.00.dirhold         [JOINT_0]DIRHOLD
+setp hm2_[HOSTMOT2](BOARD).0.stepgen.03.dirsetup        [JOINT_0]DIRSETUP
+setp hm2_[HOSTMOT2](BOARD).0.stepgen.03.dirhold         [JOINT_0]DIRHOLD
 
-setp hm2_[HOSTMOT2](BOARD).0.stepgen.00.steplen         [JOINT_0]STEPLEN
-setp hm2_[HOSTMOT2](BOARD).0.stepgen.00.stepspace       [JOINT_0]STEPSPACE
+setp hm2_[HOSTMOT2](BOARD).0.stepgen.03.steplen         [JOINT_0]STEPLEN
+setp hm2_[HOSTMOT2](BOARD).0.stepgen.03.stepspace       [JOINT_0]STEPSPACE
 
-setp hm2_[HOSTMOT2](BOARD).0.stepgen.00.position-scale  [JOINT_0]SCALE
+setp hm2_[HOSTMOT2](BOARD).0.stepgen.03.position-scale  [JOINT_0]SCALE
 
-setp hm2_[HOSTMOT2](BOARD).0.stepgen.00.maxvel          [JOINT_0]STEPGEN_MAX_VEL
-setp hm2_[HOSTMOT2](BOARD).0.stepgen.00.maxaccel        [JOINT_0]STEPGEN_MAX_ACC
+setp hm2_[HOSTMOT2](BOARD).0.stepgen.03.maxvel          [JOINT_0]STEPGEN_MAX_VEL
+setp hm2_[HOSTMOT2](BOARD).0.stepgen.03.maxaccel        [JOINT_0]STEPGEN_MAX_ACC
 
-setp hm2_[HOSTMOT2](BOARD).0.stepgen.00.step_type       0
+setp hm2_[HOSTMOT2](BOARD).0.stepgen.03.step_type       0
 
 
 # ################
-# Y [1] Axis
+# Shoulder Joint [1]
 # ################
 
 # axis enable chain
@@ -102,34 +104,35 @@ newsig emcmot.01.enable bit
 sets emcmot.01.enable FALSE
 
 net emcmot.01.enable <= joint.1.amp-enable-out 
-net emcmot.01.enable => hm2_[HOSTMOT2](BOARD).0.stepgen.01.enable
+net emcmot.01.enable => hm2_[HOSTMOT2](BOARD).0.stepgen.00.enable
 
 
 # position command and feedback
 net emcmot.01.pos-cmd <= joint.1.motor-pos-cmd
-net emcmot.01.pos-cmd => hm2_[HOSTMOT2](BOARD).0.stepgen.01.position-cmd
+net emcmot.01.pos-cmd => hm2_[HOSTMOT2](BOARD).0.stepgen.00.position-cmd
 
-net motor.01.pos-fb <= hm2_[HOSTMOT2](BOARD).0.stepgen.01.position-fb
+net motor.01.pos-fb <= hm2_[HOSTMOT2](BOARD).0.stepgen.00.position-fb
 net motor.01.pos-fb => joint.1.motor-pos-fb
 
 
 # timing parameters
-setp hm2_[HOSTMOT2](BOARD).0.stepgen.01.dirsetup        [JOINT_1]DIRSETUP
-setp hm2_[HOSTMOT2](BOARD).0.stepgen.01.dirhold         [JOINT_1]DIRHOLD
+setp hm2_[HOSTMOT2](BOARD).0.stepgen.00.dirsetup        [JOINT_1]DIRSETUP
+setp hm2_[HOSTMOT2](BOARD).0.stepgen.00.dirhold         [JOINT_1]DIRHOLD
 
-setp hm2_[HOSTMOT2](BOARD).0.stepgen.01.steplen         [JOINT_1]STEPLEN
-setp hm2_[HOSTMOT2](BOARD).0.stepgen.01.stepspace       [JOINT_1]STEPSPACE
+setp hm2_[HOSTMOT2](BOARD).0.stepgen.00.steplen         [JOINT_1]STEPLEN
+setp hm2_[HOSTMOT2](BOARD).0.stepgen.00.stepspace       [JOINT_1]STEPSPACE
 
-setp hm2_[HOSTMOT2](BOARD).0.stepgen.01.position-scale  [JOINT_1]SCALE
+setp hm2_[HOSTMOT2](BOARD).0.stepgen.00.position-scale  [JOINT_1]SCALE
 
-setp hm2_[HOSTMOT2](BOARD).0.stepgen.01.maxvel          [JOINT_1]STEPGEN_MAX_VEL
-setp hm2_[HOSTMOT2](BOARD).0.stepgen.01.maxaccel        [JOINT_1]STEPGEN_MAX_ACC
+setp hm2_[HOSTMOT2](BOARD).0.stepgen.00.maxvel          [JOINT_1]STEPGEN_MAX_VEL
+setp hm2_[HOSTMOT2](BOARD).0.stepgen.00.maxaccel        [JOINT_1]STEPGEN_MAX_ACC
 
-setp hm2_[HOSTMOT2](BOARD).0.stepgen.01.step_type       0
+setp hm2_[HOSTMOT2](BOARD).0.stepgen.00.step_type       0
 
 
 # ################
-# Z [2] Axis
+# elbow A Joint [2]
+# This goes through the differential with joint 3 (see scorbot config)
 # ################
 
 # axis enable chain
@@ -137,34 +140,34 @@ newsig emcmot.02.enable bit
 sets emcmot.02.enable FALSE
 
 net emcmot.02.enable <= joint.2.amp-enable-out 
-net emcmot.02.enable => hm2_[HOSTMOT2](BOARD).0.stepgen.02.enable
+net emcmot.02.enable => hm2_[HOSTMOT2](BOARD).0.stepgen.01.enable
 
 
 # position command and feedback
-net emcmot.02.pos-cmd <= joint.2.motor-pos-cmd
-net emcmot.02.pos-cmd => hm2_[HOSTMOT2](BOARD).0.stepgen.02.position-cmd
+net elbow.pitch-cmd  joint.2.motor-pos-cmd => diffElbow.pitch-cmd
+net elbow.pitch-fb   joint.2.motor-pos-fb <= diffElbow.pitch-fb 
 
-net motor.02.pos-fb <= hm2_[HOSTMOT2](BOARD).0.stepgen.02.position-fb
-net motor.02.pos-fb => joint.2.motor-pos-fb
+net joint2.cmd diffElbow.motor0-cmd => hm2_[HOSTMOT2](BOARD).0.stepgen.01.position-cmd diffElbow.motor0-fb
 
 
 # timing parameters
-setp hm2_[HOSTMOT2](BOARD).0.stepgen.02.dirsetup        [JOINT_2]DIRSETUP
-setp hm2_[HOSTMOT2](BOARD).0.stepgen.02.dirhold         [JOINT_2]DIRHOLD
+setp hm2_[HOSTMOT2](BOARD).0.stepgen.01.dirsetup        [JOINT_2]DIRSETUP
+setp hm2_[HOSTMOT2](BOARD).0.stepgen.01.dirhold         [JOINT_2]DIRHOLD
 
-setp hm2_[HOSTMOT2](BOARD).0.stepgen.02.steplen         [JOINT_2]STEPLEN
-setp hm2_[HOSTMOT2](BOARD).0.stepgen.02.stepspace       [JOINT_2]STEPSPACE
+setp hm2_[HOSTMOT2](BOARD).0.stepgen.01.steplen         [JOINT_2]STEPLEN
+setp hm2_[HOSTMOT2](BOARD).0.stepgen.01.stepspace       [JOINT_2]STEPSPACE
 
-setp hm2_[HOSTMOT2](BOARD).0.stepgen.02.position-scale  [JOINT_2]SCALE
+setp hm2_[HOSTMOT2](BOARD).0.stepgen.01.position-scale  [JOINT_2]SCALE
 
-setp hm2_[HOSTMOT2](BOARD).0.stepgen.02.maxvel          [JOINT_2]STEPGEN_MAX_VEL
-setp hm2_[HOSTMOT2](BOARD).0.stepgen.02.maxaccel        [JOINT_2]STEPGEN_MAX_ACC
+setp hm2_[HOSTMOT2](BOARD).0.stepgen.01.maxvel          [JOINT_2]STEPGEN_MAX_VEL
+setp hm2_[HOSTMOT2](BOARD).0.stepgen.01.maxaccel        [JOINT_2]STEPGEN_MAX_ACC
 
-setp hm2_[HOSTMOT2](BOARD).0.stepgen.02.step_type       0
+setp hm2_[HOSTMOT2](BOARD).0.stepgen.01.step_type       0
 
 
 # ################
-# A [3] Axis
+# elbow b joint [3]
+# This goes through the differential with joint 2 (see scorbot config)
 # ################
 
 # axis enable chain
@@ -172,30 +175,29 @@ newsig emcmot.03.enable bit
 sets emcmot.03.enable FALSE
 
 net emcmot.03.enable <= joint.3.amp-enable-out 
-net emcmot.03.enable => hm2_[HOSTMOT2](BOARD).0.stepgen.03.enable
+net emcmot.03.enable => hm2_[HOSTMOT2](BOARD).0.stepgen.02.enable
 
 
 # position command and feedback
-net emcmot.03.pos-cmd <= joint.3.motor-pos-cmd
-net emcmot.03.pos-cmd => hm2_[HOSTMOT2](BOARD).0.stepgen.03.position-cmd
+net elbow.roll-cmd  joint.3.motor-pos-cmd => diffElbow.roll-cmd
+net elbow.roll-fb   joint.3.motor-pos-fb <= diffElbow.roll-fb 
 
-net motor.03.pos-fb <= hm2_[HOSTMOT2](BOARD).0.stepgen.03.position-fb
-net motor.03.pos-fb => joint.3.motor-pos-fb
+net joint3.cmd diffElbow.motor1-cmd => hm2_[HOSTMOT2](BOARD).0.stepgen.02.position-cmd diffElbow.motor1-fb
 
 
 # timing parameters
-setp hm2_[HOSTMOT2](BOARD).0.stepgen.03.dirsetup        [JOINT_3]DIRSETUP
-setp hm2_[HOSTMOT2](BOARD).0.stepgen.03.dirhold         [JOINT_3]DIRHOLD
+setp hm2_[HOSTMOT2](BOARD).0.stepgen.02.dirsetup        [JOINT_3]DIRSETUP
+setp hm2_[HOSTMOT2](BOARD).0.stepgen.02.dirhold         [JOINT_3]DIRHOLD
 
-setp hm2_[HOSTMOT2](BOARD).0.stepgen.03.steplen         [JOINT_3]STEPLEN
-setp hm2_[HOSTMOT2](BOARD).0.stepgen.03.stepspace       [JOINT_3]STEPSPACE
+setp hm2_[HOSTMOT2](BOARD).0.stepgen.02.steplen         [JOINT_3]STEPLEN
+setp hm2_[HOSTMOT2](BOARD).0.stepgen.02.stepspace       [JOINT_3]STEPSPACE
 
-setp hm2_[HOSTMOT2](BOARD).0.stepgen.03.position-scale  [JOINT_3]SCALE
+setp hm2_[HOSTMOT2](BOARD).0.stepgen.02.position-scale  [JOINT_3]SCALE
 
-setp hm2_[HOSTMOT2](BOARD).0.stepgen.03.maxvel          [JOINT_3]STEPGEN_MAX_VEL
-setp hm2_[HOSTMOT2](BOARD).0.stepgen.03.maxaccel        [JOINT_3]STEPGEN_MAX_ACC
+setp hm2_[HOSTMOT2](BOARD).0.stepgen.02.maxvel          [JOINT_3]STEPGEN_MAX_VEL
+setp hm2_[HOSTMOT2](BOARD).0.stepgen.02.maxaccel        [JOINT_3]STEPGEN_MAX_ACC
 
-setp hm2_[HOSTMOT2](BOARD).0.stepgen.03.step_type       0
+setp hm2_[HOSTMOT2](BOARD).0.stepgen.02.step_type       0
 
 
 
@@ -246,11 +248,17 @@ loadrt pid num_chan=2
 addf pid.0.do-pid-calcs servo-thread
 addf pid.1.do-pid-calcs servo-thread
 
+net joint4-enable joint.4.amp-enable-out => pid.0.enable dynamixelcomp.2.enable
 
-net Bpos dynamixelcomp.2.position => pid.0.feedback joint.4.motor-pos-fb
-net Bpos-cmd <= joint.4.motor-pos-cmd => pid.0.command
-net Bpos-out pid.0.output => dynamixelcomp.2.velocity
-net Bpos-enable joint.4.amp-enable-out => pid.0.enable dynamixelcomp.2.enable
+# position command and feedback
+net wrist.pitch-cmd  joint.4.motor-pos-cmd => diffWrist.pitch-cmd
+net wrist.pitch-fb   joint.4.motor-pos-fb <= diffWrist.pitch-fb
+
+net joint4.cmd diffWrist.motor0-cmd => pid.0.command 
+net joint4-out pid.0.output => dynamixelcomp.2.velocity
+net joint4 dynamixelcomp.2.position => diffWrist.motor0-fb pid.0.feedback
+
+
 
 setp dynamixelcomp.2.scale [JOINT_4]INPUT_SCALE
 setp pid.0.maxoutput [JOINT_4]MAX_OUTPUT
@@ -265,11 +273,16 @@ setp pid.0.FF2 [JOINT_4]FF2
 setp pid.0.deadband [JOINT_4]DEADBAND
 
 
+net joint5-enable joint.5.amp-enable-out => pid.1.enable dynamixelcomp.3.enable
 
-net Cpos dynamixelcomp.3.position => pid.1.feedback joint.5.motor-pos-fb
-net Cpos-cmd <= joint.5.motor-pos-cmd => pid.1.command
-net Cpos-out pid.1.output => dynamixelcomp.3.velocity
-net Cpos-enable joint.5.amp-enable-out => pid.1.enable dynamixelcomp.3.enable
+# position command and feedback
+net wrist.roll-cmd  joint.5.motor-pos-cmd => diffWrist.roll-cmd
+net wrist.roll-fb   joint.5.motor-pos-fb <= diffWrist.roll-fb
+
+net joint5.cmd diffWrist.motor1-cmd => pid.1.command 
+net joint5-out pid.1.output => dynamixelcomp.3.velocity
+net joint5 dynamixelcomp.3.position => diffWrist.motor1-fb pid.1.feedback
+
 
 setp dynamixelcomp.3.scale [JOINT_5]INPUT_SCALE
 setp pid.1.maxoutput [JOINT_5]MAX_OUTPUT

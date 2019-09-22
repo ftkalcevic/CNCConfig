@@ -27,19 +27,19 @@ net joy-a-jog1 mux2.3.in1 <= hidcomp.0.Rx.fvalue
 net joy-b-jog1 mux2.4.in1 <= hidcomp.0.Ry.fvalue
 net joy-c-jog1 mux2.5.in1 <= hidcomp.0.Rz.fvalue
 
-net joy-x-jog mux2.0.out => halui.joint.0.analog
+net joy-x-jog mux2.0.out => halui.joint.2.analog
 net joy-y-jog mux2.1.out => halui.joint.1.analog
-net joy-z-jog mux2.2.out => halui.joint.2.analog
+net joy-z-jog mux2.2.out => halui.joint.0.analog
 net joy-a-jog mux2.3.out => halui.joint.3.analog
 net joy-b-jog mux2.4.out => halui.joint.4.analog
 net joy-c-jog mux2.5.out => halui.joint.5.analog
 
-net joy-x-jog => halui.axis.x.analog
+net joy-x-jog => halui.axis.z.analog
 net joy-y-jog => halui.axis.y.analog
-net joy-z-jog => halui.axis.z.analog
+net joy-z-jog => halui.axis.x.analog
 net joy-a-jog => halui.axis.a.analog
-net joy-b-jog => halui.axis.b.analog
-net joy-c-jog => halui.axis.c.analog
+net joy-b-jog => halui.axis.c.analog
+net joy-c-jog => halui.axis.b.analog
 
 setp scale.0.in [JOINT_0]MAX_VELOCITY
 setp scale.0.gain 60
