@@ -79,6 +79,14 @@ style "default"
 
 class "GtkWidget" style "default"
 
+style "yellow" {
+  bg[ACTIVE]      = "#ffff00"
+}
+
+style "pink" {
+  bg[ACTIVE]      = "#ff00ff"
+}
+
 style "red" {
   bg[ACTIVE]      = "#ff0000"
 }
@@ -89,19 +97,6 @@ style "blue" {
 
 style "green" {
   bg[ACTIVE]      = "#00ff00"
-}
-
-style "orange" {
-  bg[ACTIVE]      = "#FF6A00"
-}
-
-style "mpg.red" {
-
-  bg[NORMAL]      = "#FFB2B3"
-  bg[INSENSITIVE] = "#FFD8D9"
-  bg[PRELIGHT]    = "#ff0000"
-  bg[ACTIVE]      = "#ff0000"
-  bg[SELECTED]    = "#ff0000"
 }
 
 style "spindle-slider" {
@@ -128,10 +123,12 @@ style "calculator" {
 #widget "MainWindow.vbox5.hbox5.wheel.alignment3.vbox4.vbox3.so" style "red"
 #widget "MainWindow.*.so" style "red"
 #widget "*.so" style "red"
-widget "*.fo" style "blue"
-widget "*.so" style "green"
-widget "*.mv" style "orange"
-widget "*.jogging" style "red"
+widget "*.fo" style "yellow"
+widget "*.so" style "pink"
+widget "*.mv" style "blue"
+#widget "*.jogging" style "red"
+widget "*.wheelx" style "green"
+widget "*.wheelz" style "red"
 
 widget "*.vscaleSpindleSpeed" style "spindle-slider"
 
