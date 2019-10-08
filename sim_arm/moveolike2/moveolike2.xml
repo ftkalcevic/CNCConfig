@@ -89,7 +89,7 @@
     <Body name="Elbow" type="dynamic">
       <offsetfrom>UpperArm</offsetfrom>
       <RotationAxis>1 0 0 90</RotationAxis>
-      <Translation>0 0 0.3425</Translation>
+      <Translation>0 0 0.346</Translation>
       <!-- <Geom type="box">
         <Extents>0.020 0.044 0.0775</Extents>
         <Translation>0 0 0.0575</Translation>
@@ -144,7 +144,7 @@
     <!-- the fifth movable link-->
     <Body name="Wrist" type="dynamic">
       <offsetfrom>ForeArm</offsetfrom>
-      <Translation>0 0.2905 0</Translation>
+      <Translation>0 0.289 0</Translation>
       <!-- <Geom type="box">
         <Extents>0.015 0.033 0.0325</Extents>
         <Translation>0 0 0.01625</Translation>
@@ -195,11 +195,32 @@
       <maxvel>.2</maxvel>
       <resolution>2</resolution>
     </Joint>
-   </KinBody>
 
-  <!-- Specifying the manipulator structure-->
+    <Body name="Gripper" type="dynamic">
+      <offsetfrom>WristR</offsetfrom>
+      <Translation>0 0 0</Translation>
+      <Geom type="box">
+        <Extents>0.0025 0.0025 0.00325</Extents>
+        <Translation>0 0 0.01625</Translation>
+        <diffusecolor>.8 .0 .0</diffusecolor>
+        <transparency>0.3 </transparency>
+      </Geom>
+    </Body>
+    <Joint name="GripperTranslate" type="slider">
+      <Body>WristR</Body>
+      <Body>Gripper</Body>
+      <offsetfrom>Gripper</offsetfrom>
+      <weight>3</weight>
+      <limits>0 0.05</limits>
+      <axis>0 1 0</axis>
+      <maxvel>.2</maxvel>
+      <resolution>2</resolution>
+    </Joint>
+  </KinBody>
+
+   <!-- Specifying the manipulator structure-->
   <Manipulator name="arm">
-    <effector>WristR</effector>   <!-- last link where end effector is attached-->
+    <effector>Gripper</effector>   <!-- last link where end effector is attached-->
     <base>Base</base>           <!-- base link-->
     <!-- the id of the inverse kinematics solver, it is not necessary to-->
     <!-- specify an ik solver for every robot. But if there is one,-->
@@ -209,7 +230,7 @@
     <closingdirection>1 1</closingdirection>
     <direction>0 0 1</direction>
     <!-- grasp goal with respect to the effector-->
-    <Translation>0 0.170 0</Translation>
+    <Translation>0 0.120 0</Translation>
   </Manipulator>
 
 </Robot>

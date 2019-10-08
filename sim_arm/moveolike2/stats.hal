@@ -14,6 +14,7 @@ net stats.2 uiStats.2 <= joint.2.pos-cmd
 net stats.3 uiStats.3 <= joint.3.pos-cmd
 net stats.4 uiStats.4 <= joint.4.pos-cmd
 net stats.5 uiStats.5 <= joint.5.pos-cmd
+net stats.6 uiStats.6 <= joint.6.pos-cmd
 
 net stats.0.homed uiStats.0.homed <= joint.0.homed
 net stats.1.homed uiStats.1.homed <= joint.1.homed
@@ -21,6 +22,7 @@ net stats.2.homed uiStats.2.homed <= joint.2.homed
 net stats.3.homed uiStats.3.homed <= joint.3.homed
 net stats.4.homed uiStats.4.homed <= joint.4.homed
 net stats.5.homed uiStats.5.homed <= joint.5.homed
+net stats.6.homed uiStats.6.homed <= joint.6.homed
 
 net is-teleop-mode => uiStats.axis-table
 net is-teleop-mode => not.2.in

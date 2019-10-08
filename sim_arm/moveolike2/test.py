@@ -10,6 +10,16 @@ env.SetViewer('qtcoin') # start the viewer
 env.Load('simple.robot.env.xml') # load a scene
 robot = env.GetRobots()[0] # get the first robot
 
+joints=robot.GetJoints()
+for j in joints:
+    print("Joint type -%s-" % j.GetType())
+    print(j.GetType());
+    print(j.GetType().value);
+    print(j.GetInfo()._type);
+    if j.GetType() == KinBody.JointType.Revolute:
+        print( "is Revolute")
+
+
 manip = robot.SetActiveManipulator('arm') # set the manipulator to leftarm
 ikmodel = databases.inversekinematics.InverseKinematicsModel(robot,iktype=IkParameterization.Type.Transform6D)
 if not ikmodel.load():
