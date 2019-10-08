@@ -1,0 +1,3 @@
+#openrave.py --database inversekinematics --robot=./moveolike2.xml --iktype=TranslationDirection5D --freejoint=WristR --perftiming=1000 --outputlang=c
+openrave.py --database inversekinematics --robot=./moveolike2.xml --iktype=Transform6D --perftiming=1000 --outputlang=c
+

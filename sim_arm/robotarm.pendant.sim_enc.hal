@@ -1,0 +1,88 @@
+loadusr -Wn hidcomp /home/frankt/svn/hid/hidcomp/debug/hidcomp -i robotarm.simple.ini robotarm-pendant.hid
+
+loadrt encoder num_chan=6
+loadrt sim_encoder num_chan=6
+
+
+net joy-x-jog halui.jog.0.analog <= hidcomp.0.X.fvalue
+net joy-y-jog halui.jog.1.analog <= hidcomp.0.X.fvalue
+net joy-z-jog halui.jog.2.analog <= hidcomp.0.X.fvalue
+
+#net velX hidcomp.0.X.fvalue => sim-encoder.0.speed
+#net velY hidcomp.0.Y.fvalue => sim-encoder.1.speed
+#net velZ hidcomp.0.Z.fvalue => sim-encoder.2.speed
+#net velA hidcomp.0.Rx.fvalue => sim-encoder.3.speed
+#net velB hidcomp.0.Ry.fvalue => sim-encoder.4.speed
+#net velC hidcomp.0.Rz.fvalue => sim-encoder.5.speed
+
+net XA sim-encoder.0.phase-A => encoder.0.phase-A
+net XB sim-encoder.0.phase-B => encoder.0.phase-B
+net YA sim-encoder.1.phase-A => encoder.1.phase-A
+net YB sim-encoder.1.phase-B => encoder.1.phase-B
+net ZA sim-encoder.2.phase-A => encoder.2.phase-A
+net ZB sim-encoder.2.phase-B => encoder.2.phase-B
+net AA sim-encoder.3.phase-A => encoder.3.phase-A
+net AB sim-encoder.3.phase-B => encoder.3.phase-B
+net BA sim-encoder.4.phase-A => encoder.4.phase-A
+net BB sim-encoder.4.phase-B => encoder.4.phase-B
+net CA sim-encoder.5.phase-A => encoder.5.phase-A
+net CB sim-encoder.5.phase-B => encoder.5.phase-B
+
+
+net countX encoder.0.counts => axis.0.jog-counts
+net countY encoder.1.counts => axis.1.jog-counts
+net countZ encoder.2.counts => axis.2.jog-counts
+net countA encoder.3.counts => axis.3.jog-counts
+net countB encoder.4.counts => axis.4.jog-counts
+#net countC encoder.5.counts => axis.5.jog-counts
+
+
+setp encoder.0.position-scale            1
+setp encoder.0.x4-mode         TRUE
+setp encoder.1.position-scale            1
+setp encoder.1.x4-mode         TRUE
+setp encoder.2.position-scale            1
+setp encoder.2.x4-mode         TRUE
+setp encoder.3.position-scale            1
+setp encoder.3.x4-mode         TRUE
+setp encoder.4.position-scale            1
+setp encoder.4.x4-mode         TRUE
+setp encoder.5.position-scale            1
+setp encoder.5.x4-mode         TRUE
+setp encoder.capture-position.tmax            0
+setp encoder.update-counters.tmax            0
+setp sim-encoder.0.ppr     00000064
+setp sim-encoder.0.scale            1
+setp sim-encoder.1.ppr     00000064
+setp sim-encoder.1.scale            1
+setp sim-encoder.2.ppr     00000064
+setp sim-encoder.2.scale            1
+setp sim-encoder.3.ppr     00000064
+setp sim-encoder.3.scale            1
+setp sim-encoder.4.ppr     00000064
+setp sim-encoder.4.scale            1
+setp sim-encoder.5.ppr     00000064
+setp sim-encoder.5.scale            1
+setp sim-encoder.make-pulses.tmax            0
+setp sim-encoder.update-speed.tmax            0
+
+
+setp axis.0.jog-enable TRUE
+setp axis.1.jog-enable TRUE
+setp axis.2.jog-enable TRUE
+setp axis.3.jog-enable TRUE
+setp axis.4.jog-enable TRUE
+#setp axis.5.jog-enable TRUE
+
+setp axis.0.jog-scale 1.0
+setp axis.1.jog-scale 1.0
+setp axis.2.jog-scale 1.0
+setp axis.3.jog-scale 1.0
+setp axis.4.jog-scale 1.0
+#setp axis.5.jog-scale 1.0
+
+
+addf encoder.capture-position servo-thread
+addf sim-encoder.update-speed servo-thread
+addf encoder.update-counters servo-thread
+addf sim-encoder.make-pulses servo-thread

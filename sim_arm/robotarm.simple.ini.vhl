@@ -1,0 +1,418 @@
+<!DOCTYPE visualHalLayout>
+<visualHalLayout>
+ <positions>
+  <position x="-1424" y="-430" componentInstance="motion"/>
+  <position x="-863.9999999999998" y="613.9999999999998" componentInstance="axis.1"/>
+  <position x="-247" y="-157" componentInstance="ddt_zv"/>
+  <position x="-400.2375900532359" y="17.31370849898476" componentInstance="ddt_z"/>
+  <position x="-726.8254685319158" y="-259.414213562373" componentInstance="pwmgen.0"/>
+  <position x="-206.9999999999999" y="-469.9999999999999" componentInstance="conv-float-s32.0"/>
+  <position x="-192" y="-261" componentInstance="ddt_yv"/>
+  <position x="-359.3050865276332" y="-151.2842712474619" componentInstance="ddt_xv"/>
+  <position x="-579.8929650063131" y="28.23611075682071" componentInstance="ddt_y"/>
+  <position x="-160.4939033455901" y="-140.5857864376269" componentInstance="ddt_x"/>
+  <position x="-797.5218613006978" y="-37.17662350913716" componentInstance="scale.0"/>
+  <position x="-411.9999999999999" y="607.9999999999998" componentInstance="axis.3"/>
+  <position x="-379.9999999999999" y="-401.9999999999999" componentInstance="timedelay.0"/>
+  <position x="0" y="0" componentInstance="mux2.3"/>
+  <position x="0" y="0" componentInstance="mux2.2"/>
+  <position x="0" y="0" componentInstance="halui"/>
+  <position x="202" y="-116" componentInstance="mux2.4"/>
+  <position x="194" y="-26" componentInstance="mux2.5"/>
+  <position x="-1300" y="615.9999999999998" componentInstance="axis.0"/>
+  <position x="314" y="-6" componentInstance="mux2.6"/>
+  <position x="-588.9999999999999" y="-554.9999999999999" componentInstance="edge.0"/>
+  <position x="64" y="55" componentInstance="vel_xy"/>
+  <position x="-89" y="73" componentInstance="vel_xyz"/>
+  <position x="17.99999999999995" y="603.9999999999998" componentInstance="axis.2"/>
+  <position x="-112" y="-773.9999999999999" componentInstance="hidcomp.0"/>
+  <position x="952.1017305526639" y="101.556349186104" componentInstance="openravedisplay"/>
+  <position x="467.9999999999999" y="601.9999999999998" componentInstance="axis.4"/>
+  <position x="283" y="-236" componentInstance="and5"/>
+  <position x="-13.60555569727168" y="-121.3294731452727" componentInstance="not.0"/>
+  <position x="-510.177542626094" y="-229.4561504950346" componentInstance="not.1"/>
+  <position x="0" y="0" componentInstance="mux2.0"/>
+  <position x="0" y="0" componentInstance="mux2.1"/>
+ </positions>
+ <wires>
+  <wire pin1="out" pin2="enable" signal="not_hand5" componentInstance1="not.0" componentInstance2="pwmgen.0">
+   <point x="22.79444430272832" y="-122.0294731452727" sequenceNo="1"/>
+   <point x="50" y="-122.0294731452727" sequenceNo="2"/>
+   <point x="50" y="-290" sequenceNo="3"/>
+   <point x="-850" y="-290" sequenceNo="4"/>
+   <point x="-850" y="-230.914213562373" sequenceNo="5"/>
+   <point x="-813.3254685319158" y="-230.914213562373" sequenceNo="6"/>
+  </wire>
+  <wire pin1="machine.is-on" pin2="sel" signal="machine_mux_sel" componentInstance1="halui" componentInstance2="mux2.6">
+   <point x="132.5" y="48.5" sequenceNo="1"/>
+   <point x="64.25" y="48.5" sequenceNo="2"/>
+   <point x="64.25" y="105" sequenceNo="3"/>
+   <point x="310" y="105" sequenceNo="4"/>
+  </wire>
+  <wire pin1="out" pin2="MachineOn.ivalue" signal="machine_on_ledu" componentInstance1="conv-float-s32.0" componentInstance2="hidcomp.0">
+   <point x="-287.4999999999999" y="-421.4999999999999" sequenceNo="1"/>
+   <point x="-330" y="-421.4999999999999" sequenceNo="2"/>
+   <point x="-330" y="-625.4999999999999" sequenceNo="3"/>
+   <point x="-233.5" y="-625.4999999999999" sequenceNo="4"/>
+  </wire>
+  <wire pin1="out" pin2="in" signal="machine_on_ledf" componentInstance1="mux2.6" componentInstance2="conv-float-s32.0">
+   <point x="365" y="-28.5" sequenceNo="1"/>
+   <point x="410" y="-28.5" sequenceNo="2"/>
+   <point x="410" y="-80" sequenceNo="3"/>
+   <point x="-118.2499999999999" y="-80" sequenceNo="4"/>
+   <point x="-118.2499999999999" y="-441.4999999999999" sequenceNo="5"/>
+   <point x="-287.4999999999999" y="-441.4999999999999" sequenceNo="6"/>
+  </wire>
+  <wire pin1="and" pin2="in" signal="hand5" componentInstance1="and5" componentInstance2="not.0">
+   <point x="342.5" y="-207.5" sequenceNo="1"/>
+   <point x="360" y="-207.5" sequenceNo="2"/>
+   <point x="360" y="-250" sequenceNo="3"/>
+   <point x="-70" y="-250" sequenceNo="4"/>
+   <point x="-70" y="-121.4994731452727" sequenceNo="5"/>
+   <point x="-43.10555569727168" y="-121.4994731452727" sequenceNo="6"/>
+  </wire>
+  <wire pin1="World.in" pin2="mode.teleop" signal="world-mode" componentInstance1="hidcomp.0" componentInstance2="halui">
+   <point x="-233.5" y="-585.4999999999999" sequenceNo="1"/>
+   <point x="-182.5" y="-585.4999999999999" sequenceNo="2"/>
+   <point x="-182.5" y="408.5" sequenceNo="3"/>
+   <point x="-132.5" y="408.5" sequenceNo="4"/>
+  </wire>
+  <wire pin1="WorldLED.out" pin2="mode.is-teleop" signal="world-led" componentInstance1="hidcomp.0" componentInstance2="halui">
+   <point x="-233.5" y="-565.4999999999999" sequenceNo="1"/>
+   <point x="-182.5" y="-565.4999999999999" sequenceNo="2"/>
+   <point x="-182.5" y="368.5" sequenceNo="3"/>
+   <point x="-132.5" y="368.5" sequenceNo="4"/>
+  </wire>
+  <wire pin1="joint.4.is-homed" pin2="in-04" signal="hand4" componentInstance1="halui" componentInstance2="and5">
+   <point x="-132.5" y="288.5" sequenceNo="1"/>
+   <point x="-172.5" y="288.5" sequenceNo="2"/>
+   <point x="-172.5" y="-127.5" sequenceNo="3"/>
+   <point x="223.5" y="-127.5" sequenceNo="4"/>
+  </wire>
+  <wire pin1="Joint.in" pin2="mode.joint" signal="joint-mode" componentInstance1="hidcomp.0" componentInstance2="halui">
+   <point x="-233.5" y="-665.4999999999999" sequenceNo="1"/>
+   <point x="-182.5" y="-665.4999999999999" sequenceNo="2"/>
+   <point x="-182.5" y="388.5" sequenceNo="3"/>
+   <point x="-132.5" y="388.5" sequenceNo="4"/>
+  </wire>
+  <wire pin1="joint.3.is-homed" pin2="in-03" signal="hand3" componentInstance1="halui" componentInstance2="and5">
+   <point x="-132.5" y="268.5" sequenceNo="1"/>
+   <point x="-172.5" y="268.5" sequenceNo="2"/>
+   <point x="-172.5" y="-147.5" sequenceNo="3"/>
+   <point x="223.5" y="-147.5" sequenceNo="4"/>
+  </wire>
+  <wire pin1="joint.2.is-homed" pin2="in-02" signal="hand2" componentInstance1="halui" componentInstance2="and5">
+   <point x="-132.5" y="248.5" sequenceNo="1"/>
+   <point x="-172.5" y="248.5" sequenceNo="2"/>
+   <point x="-172.5" y="-167.5" sequenceNo="3"/>
+   <point x="223.5" y="-167.5" sequenceNo="4"/>
+  </wire>
+  <wire pin1="joint.1.is-homed" pin2="in-01" signal="hand1" componentInstance1="halui" componentInstance2="and5">
+   <point x="-132.5" y="228.5" sequenceNo="1"/>
+   <point x="-172.5" y="228.5" sequenceNo="2"/>
+   <point x="-172.5" y="-187.5" sequenceNo="3"/>
+   <point x="223.5" y="-187.5" sequenceNo="4"/>
+  </wire>
+  <wire pin1="JointLED.out" pin2="mode.is-joint" signal="joint-led" componentInstance1="hidcomp.0" componentInstance2="halui">
+   <point x="-233.5" y="-645.4999999999999" sequenceNo="1"/>
+   <point x="-182.5" y="-645.4999999999999" sequenceNo="2"/>
+   <point x="-182.5" y="348.5" sequenceNo="3"/>
+   <point x="-132.5" y="348.5" sequenceNo="4"/>
+  </wire>
+  <wire pin1="out" pin2="jog-speed" signal="jogspeed" componentInstance1="scale.0" componentInstance2="halui">
+   <point x="-861.0218613006978" y="-8.676623509137158" sequenceNo="1"/>
+   <point x="-890" y="-8.676623509137158" sequenceNo="2"/>
+   <point x="-890" y="-70" sequenceNo="3"/>
+   <point x="-496.7609306503489" y="-70" sequenceNo="4"/>
+   <point x="-496.7609306503489" y="88.5" sequenceNo="5"/>
+   <point x="-132.5" y="88.5" sequenceNo="6"/>
+  </wire>
+  <wire pin1="out" pin2="jog.4.analog" signal="joy-b-jog" componentInstance1="mux2.4" componentInstance2="halui">
+   <point x="253" y="-138.5" sequenceNo="1"/>
+   <point x="-40.75" y="-138.5" sequenceNo="2"/>
+   <point x="-40.75" y="188.5" sequenceNo="3"/>
+   <point x="-132.5" y="188.5" sequenceNo="4"/>
+  </wire>
+  <wire pin1="out" pin2="jog.2.analog" signal="joy-z-jog" componentInstance1="mux2.2" componentInstance2="halui">
+   <point x="51" y="-22.5" sequenceNo="1"/>
+   <point x="-40.75" y="-22.5" sequenceNo="2"/>
+   <point x="-40.75" y="148.5" sequenceNo="3"/>
+   <point x="-132.5" y="148.5" sequenceNo="4"/>
+  </wire>
+  <wire pin1="out" pin2="jog.3.analog" signal="joy-a-jog" componentInstance1="mux2.3" componentInstance2="halui">
+   <point x="51" y="-22.5" sequenceNo="1"/>
+   <point x="-40.75" y="-22.5" sequenceNo="2"/>
+   <point x="-40.75" y="168.5" sequenceNo="3"/>
+   <point x="-132.5" y="168.5" sequenceNo="4"/>
+  </wire>
+  <wire pin1="joint.0.is-homed" pin2="in-00" signal="hand0" componentInstance1="halui" componentInstance2="and5">
+   <point x="-132.5" y="208.5" sequenceNo="1"/>
+   <point x="-172.5" y="208.5" sequenceNo="2"/>
+   <point x="-172.5" y="-207.5" sequenceNo="3"/>
+   <point x="223.5" y="-207.5" sequenceNo="4"/>
+  </wire>
+  <wire pin1="pwm" pin2="in" signal="homed-led" componentInstance1="pwmgen.0" componentInstance2="not.1">
+   <point x="-640.3254685319158" y="-230.914213562373" sequenceNo="1"/>
+   <point x="-590" y="-230.914213562373" sequenceNo="2"/>
+   <point x="-590" y="-229.6261504950346" sequenceNo="3"/>
+   <point x="-539.677542626094" y="-229.6261504950346" sequenceNo="4"/>
+  </wire>
+  <wire pin1="out" pin2="HomeLED.out" signal="not-homed-led" componentInstance1="not.1" componentInstance2="hidcomp.0">
+   <point x="-473.777542626094" y="-230.1561504950346" sequenceNo="1"/>
+   <point x="-350" y="-230.1561504950346" sequenceNo="2"/>
+   <point x="-350" y="-310" sequenceNo="3"/>
+   <point x="-46.175" y="-310" sequenceNo="4"/>
+   <point x="-46.175" y="-685.4999999999999" sequenceNo="5"/>
+   <point x="-233.5" y="-685.4999999999999" sequenceNo="6"/>
+  </wire>
+  <wire pin1="motor-pos-fb" pin2="motor-pos-cmd" signal="Zpos" componentInstance1="axis.2" componentInstance2="axis.2">
+   <point x="-130.1900000000001" y="490.0199999999998" sequenceNo="1"/>
+   <point x="210" y="490.0199999999998" sequenceNo="2"/>
+   <point x="210" y="260" sequenceNo="3"/>
+   <point x="-150" y="260" sequenceNo="4"/>
+   <point x="-150" y="799.0199999999998" sequenceNo="5"/>
+   <point x="184.8099999999999" y="799.0199999999998" sequenceNo="6"/>
+  </wire>
+  <wire pin1="motor-pos-cmd" pin2="in" signal="Zpos" componentInstance1="axis.2" componentInstance2="ddt_z">
+   <point x="184.8099999999999" y="799.0199999999998" sequenceNo="1"/>
+   <point x="210" y="799.0199999999998" sequenceNo="2"/>
+   <point x="210" y="220" sequenceNo="3"/>
+   <point x="-470" y="220" sequenceNo="4"/>
+   <point x="-470" y="16.81370849898476" sequenceNo="5"/>
+   <point x="-463.2375900532359" y="16.81370849898476" sequenceNo="6"/>
+  </wire>
+  <wire pin1="motor-pos-cmd" pin2="motor-pos-fb" signal="Apos" componentInstance1="axis.3" componentInstance2="axis.3">
+   <point x="-245.1899999999999" y="803.0199999999998" sequenceNo="1"/>
+   <point x="-220" y="803.0199999999998" sequenceNo="2"/>
+   <point x="-220" y="280" sequenceNo="3"/>
+   <point x="-590" y="280" sequenceNo="4"/>
+   <point x="-590" y="494.0199999999998" sequenceNo="5"/>
+   <point x="-560.1899999999998" y="494.0199999999998" sequenceNo="6"/>
+  </wire>
+  <wire pin1="out" pin2="jog.0.analog" signal="joy-x-jog" componentInstance1="mux2.0" componentInstance2="halui">
+   <point x="51" y="-22.5" sequenceNo="1"/>
+   <point x="-40.75" y="-22.5" sequenceNo="2"/>
+   <point x="-40.75" y="108.5" sequenceNo="3"/>
+   <point x="-132.5" y="108.5" sequenceNo="4"/>
+  </wire>
+  <wire pin1="in1" pin2="Rx.fvalue" signal="joy-a-jog1" componentInstance1="mux2.3" componentInstance2="hidcomp.0">
+   <point x="-56.5" y="-2" sequenceNo="1"/>
+   <point x="-23.5" y="-2" sequenceNo="2"/>
+   <point x="-23.5" y="-745.4999999999999" sequenceNo="3"/>
+   <point x="9.5" y="-745.4999999999999" sequenceNo="4"/>
+  </wire>
+  <wire pin1="out" pin2="in" signal="Xvel" componentInstance1="ddt_x" componentInstance2="ddt_xv">
+   <point x="-89.9939033455901" y="-142.0857864376269" sequenceNo="1"/>
+   <point x="-250" y="-142.0857864376269" sequenceNo="2"/>
+   <point x="-250" y="-151.7842712474619" sequenceNo="3"/>
+   <point x="-422.3050865276332" y="-151.7842712474619" sequenceNo="4"/>
+  </wire>
+  <wire pin1="in0" pin2="out" signal="Xvel" componentInstance1="vel_xy" componentInstance2="ddt_x">
+   <point x="11.5" y="83.5" sequenceNo="1"/>
+   <point x="-92" y="83.5" sequenceNo="2"/>
+   <point x="-92" y="-142.0857864376269" sequenceNo="3"/>
+   <point x="-89.9939033455901" y="-142.0857864376269" sequenceNo="4"/>
+  </wire>
+  <wire pin1="out" pin2="in1" signal="Yvel" componentInstance1="ddt_y" componentInstance2="vel_xy">
+   <point x="-509.3929650063131" y="26.73611075682071" sequenceNo="1"/>
+   <point x="-100" y="26.73611075682071" sequenceNo="2"/>
+   <point x="-100" y="30" sequenceNo="3"/>
+   <point x="120" y="30" sequenceNo="4"/>
+   <point x="120" y="83.5" sequenceNo="5"/>
+   <point x="116.5" y="83.5" sequenceNo="6"/>
+  </wire>
+  <wire pin1="in" pin2="out" signal="Yvel" componentInstance1="ddt_yv" componentInstance2="ddt_y">
+   <point x="-255" y="-261.5" sequenceNo="1"/>
+   <point x="-247" y="-261.5" sequenceNo="2"/>
+   <point x="-247" y="26.73611075682071" sequenceNo="3"/>
+   <point x="-509.3929650063131" y="26.73611075682071" sequenceNo="4"/>
+  </wire>
+  <wire pin1="in1" pin2="Z.fvalue" signal="joy-z-jog1" componentInstance1="mux2.2" componentInstance2="hidcomp.0">
+   <point x="-56.5" y="-2" sequenceNo="1"/>
+   <point x="-23.5" y="-2" sequenceNo="2"/>
+   <point x="-23.5" y="-665.4999999999999" sequenceNo="3"/>
+   <point x="9.5" y="-665.4999999999999" sequenceNo="4"/>
+  </wire>
+  <wire pin1="in1" pin2="Y.fvalue" signal="joy-y-jog1" componentInstance1="mux2.1" componentInstance2="hidcomp.0">
+   <point x="-56.5" y="-2" sequenceNo="1"/>
+   <point x="-23.5" y="-2" sequenceNo="2"/>
+   <point x="-23.5" y="-685.4999999999999" sequenceNo="3"/>
+   <point x="9.5" y="-685.4999999999999" sequenceNo="4"/>
+  </wire>
+  <wire pin1="out" pin2="in" signal="Zvel" componentInstance1="ddt_z" componentInstance2="ddt_zv">
+   <point x="-329.7375900532359" y="15.81370849898476" sequenceNo="1"/>
+   <point x="-272" y="15.81370849898476" sequenceNo="2"/>
+   <point x="-272" y="-157.5" sequenceNo="3"/>
+   <point x="-310" y="-157.5" sequenceNo="4"/>
+  </wire>
+  <wire pin1="in0" pin2="out" signal="Zvel" componentInstance1="vel_xyz" componentInstance2="ddt_z">
+   <point x="-141.5" y="101.5" sequenceNo="1"/>
+   <point x="-150" y="101.5" sequenceNo="2"/>
+   <point x="-150" y="15.81370849898476" sequenceNo="3"/>
+   <point x="-329.7375900532359" y="15.81370849898476" sequenceNo="4"/>
+  </wire>
+  <wire pin1="out" pin2="in1" signal="XYvel" componentInstance1="vel_xy" componentInstance2="vel_xyz">
+   <point x="11.5" y="103.5" sequenceNo="1"/>
+   <point x="0" y="103.5" sequenceNo="2"/>
+   <point x="0" y="101.5" sequenceNo="3"/>
+   <point x="-36.5" y="101.5" sequenceNo="4"/>
+  </wire>
+  <wire pin1="out" pin2="estop.reset" signal="estop_reset_edge" componentInstance1="edge.0" componentInstance2="halui">
+   <point x="-673.4999999999999" y="-506.4999999999999" sequenceNo="1"/>
+   <point x="-402.9999999999999" y="-506.4999999999999" sequenceNo="2"/>
+   <point x="-402.9999999999999" y="48.5" sequenceNo="3"/>
+   <point x="-132.5" y="48.5" sequenceNo="4"/>
+  </wire>
+  <wire pin1="out" pin2="jog.1.analog" signal="joy-y-jog" componentInstance1="mux2.1" componentInstance2="halui">
+   <point x="51" y="-22.5" sequenceNo="1"/>
+   <point x="-40.75" y="-22.5" sequenceNo="2"/>
+   <point x="-40.75" y="128.5" sequenceNo="3"/>
+   <point x="-132.5" y="128.5" sequenceNo="4"/>
+  </wire>
+  <wire pin1="in1" pin2="X.fvalue" signal="joy-x-jog1" componentInstance1="mux2.0" componentInstance2="hidcomp.0">
+   <point x="-56.5" y="-2" sequenceNo="1"/>
+   <point x="-17" y="-2" sequenceNo="2"/>
+   <point x="-17" y="-705.4999999999999" sequenceNo="3"/>
+   <point x="9.5" y="-705.4999999999999" sequenceNo="4"/>
+  </wire>
+  <wire pin1="sel" pin2="RxRyRzButton.in" signal="jog-abc-enable" componentInstance1="mux2.4" componentInstance2="hidcomp.0">
+   <point x="198" y="-5" sequenceNo="1"/>
+   <point x="-118.75" y="-5" sequenceNo="2"/>
+   <point x="-118.75" y="-605.4999999999999" sequenceNo="3"/>
+   <point x="-233.5" y="-605.4999999999999" sequenceNo="4"/>
+  </wire>
+  <wire pin1="RxRyRzButton.in" pin2="sel" signal="jog-abc-enable" componentInstance1="hidcomp.0" componentInstance2="mux2.3">
+   <point x="-233.5" y="-605.4999999999999" sequenceNo="1"/>
+   <point x="-118.75" y="-605.4999999999999" sequenceNo="2"/>
+   <point x="-118.75" y="111" sequenceNo="3"/>
+   <point x="-4" y="111" sequenceNo="4"/>
+  </wire>
+  <wire pin1="out" pin2="machine.on" signal="delay_not_estop" componentInstance1="timedelay.0" componentInstance2="halui">
+   <point x="-458.4999999999999" y="-353.4999999999999" sequenceNo="1"/>
+   <point x="-295.4999999999999" y="-353.4999999999999" sequenceNo="2"/>
+   <point x="-295.4999999999999" y="328.5" sequenceNo="3"/>
+   <point x="-132.5" y="328.5" sequenceNo="4"/>
+  </wire>
+  <wire pin1="joint-pos-fb" pin2="joint0" signal="j0" componentInstance1="axis.0" componentInstance2="openravedisplay">
+   <point x="-1133.19" y="751.0199999999998" sequenceNo="1"/>
+   <point x="-1100" y="751.0199999999998" sequenceNo="2"/>
+   <point x="-1100" y="130.056349186104" sequenceNo="3"/>
+   <point x="865.6017305526639" y="130.056349186104" sequenceNo="4"/>
+  </wire>
+  <wire pin1="joint-pos-fb" pin2="joint1" signal="j1" componentInstance1="axis.1" componentInstance2="openravedisplay">
+   <point x="-697.1899999999998" y="749.0199999999998" sequenceNo="1"/>
+   <point x="-630" y="749.0199999999998" sequenceNo="2"/>
+   <point x="-630" y="150.056349186104" sequenceNo="3"/>
+   <point x="865.6017305526639" y="150.056349186104" sequenceNo="4"/>
+  </wire>
+  <wire pin1="joint-pos-fb" pin2="joint2" signal="j2" componentInstance1="axis.2" componentInstance2="openravedisplay">
+   <point x="184.8099999999999" y="739.0199999999998" sequenceNo="1"/>
+   <point x="240" y="739.0199999999998" sequenceNo="2"/>
+   <point x="240" y="170.056349186104" sequenceNo="3"/>
+   <point x="865.6017305526639" y="170.056349186104" sequenceNo="4"/>
+  </wire>
+  <wire pin1="joint-pos-fb" pin2="joint3" signal="j3" componentInstance1="axis.3" componentInstance2="openravedisplay">
+   <point x="-245.1899999999999" y="743.0199999999998" sequenceNo="1"/>
+   <point x="-200" y="743.0199999999998" sequenceNo="2"/>
+   <point x="-200" y="190.056349186104" sequenceNo="3"/>
+   <point x="865.6017305526639" y="190.056349186104" sequenceNo="4"/>
+  </wire>
+  <wire pin1="joint-pos-fb" pin2="joint4" signal="j4" componentInstance1="axis.4" componentInstance2="openravedisplay">
+   <point x="634.8099999999999" y="737.0199999999998" sequenceNo="1"/>
+   <point x="740" y="737.0199999999998" sequenceNo="2"/>
+   <point x="740" y="210.056349186104" sequenceNo="3"/>
+   <point x="865.6017305526639" y="210.056349186104" sequenceNo="4"/>
+  </wire>
+  <wire pin1="in" pin2="E-Stop.in-not" signal="not_estop" componentInstance1="edge.0" componentInstance2="hidcomp.0">
+   <point x="-673.4999999999999" y="-526.4999999999999" sequenceNo="1"/>
+   <point x="-700" y="-526.4999999999999" sequenceNo="2"/>
+   <point x="-700" y="-725.4999999999999" sequenceNo="3"/>
+   <point x="-233.5" y="-725.4999999999999" sequenceNo="4"/>
+  </wire>
+  <wire pin1="E-Stop.in-not" pin2="in" signal="not_estop" componentInstance1="hidcomp.0" componentInstance2="timedelay.0">
+   <point x="-233.5" y="-725.4999999999999" sequenceNo="1"/>
+   <point x="-480" y="-725.4999999999999" sequenceNo="2"/>
+   <point x="-480" y="-373.4999999999999" sequenceNo="3"/>
+   <point x="-458.4999999999999" y="-373.4999999999999" sequenceNo="4"/>
+  </wire>
+  <wire pin1="sel" pin2="XYZButton.in" signal="jog-xyz-enable" componentInstance1="mux2.0" componentInstance2="hidcomp.0">
+   <point x="-4" y="111" sequenceNo="1"/>
+   <point x="9.25" y="111" sequenceNo="2"/>
+   <point x="9.25" y="-545.4999999999999" sequenceNo="3"/>
+   <point x="-233.5" y="-545.4999999999999" sequenceNo="4"/>
+  </wire>
+  <wire pin1="sel" pin2="XYZButton.in" signal="jog-xyz-enable" componentInstance1="mux2.2" componentInstance2="hidcomp.0">
+   <point x="-4" y="111" sequenceNo="1"/>
+   <point x="-118.75" y="111" sequenceNo="2"/>
+   <point x="-118.75" y="-545.4999999999999" sequenceNo="3"/>
+   <point x="-233.5" y="-545.4999999999999" sequenceNo="4"/>
+  </wire>
+  <wire pin1="XYZButton.in" pin2="sel" signal="jog-xyz-enable" componentInstance1="hidcomp.0" componentInstance2="mux2.1">
+   <point x="-233.5" y="-545.4999999999999" sequenceNo="1"/>
+   <point x="-118.75" y="-545.4999999999999" sequenceNo="2"/>
+   <point x="-118.75" y="111" sequenceNo="3"/>
+   <point x="-4" y="111" sequenceNo="4"/>
+  </wire>
+  <wire pin1="E-Stop.in" pin2="estop.activate" signal="estop" componentInstance1="hidcomp.0" componentInstance2="halui">
+   <point x="-233.5" y="-745.4999999999999" sequenceNo="1"/>
+   <point x="-182.5" y="-745.4999999999999" sequenceNo="2"/>
+   <point x="-182.5" y="28.5" sequenceNo="3"/>
+   <point x="-132.5" y="28.5" sequenceNo="4"/>
+  </wire>
+  <wire pin1="machine.off" pin2="E-Stop.in" signal="estop" componentInstance1="halui" componentInstance2="hidcomp.0">
+   <point x="-132.5" y="308.5" sequenceNo="1"/>
+   <point x="-182.5" y="308.5" sequenceNo="2"/>
+   <point x="-182.5" y="-745.4999999999999" sequenceNo="3"/>
+   <point x="-233.5" y="-745.4999999999999" sequenceNo="4"/>
+  </wire>
+  <wire pin1="in1" pin2="Ry.fvalue" signal="joy-b-jog1" componentInstance1="mux2.4" componentInstance2="hidcomp.0">
+   <point x="145.5" y="-118" sequenceNo="1"/>
+   <point x="-23.5" y="-118" sequenceNo="2"/>
+   <point x="-23.5" y="-725.4999999999999" sequenceNo="3"/>
+   <point x="9.5" y="-725.4999999999999" sequenceNo="4"/>
+  </wire>
+  <wire pin1="motor-pos-cmd" pin2="motor-pos-fb" signal="Bpos" componentInstance1="axis.4" componentInstance2="axis.4">
+   <point x="634.8099999999999" y="797.0199999999998" sequenceNo="1"/>
+   <point x="690" y="797.0199999999998" sequenceNo="2"/>
+   <point x="690" y="280" sequenceNo="3"/>
+   <point x="300" y="280" sequenceNo="4"/>
+   <point x="300" y="488.0199999999998" sequenceNo="5"/>
+   <point x="319.8099999999999" y="488.0199999999998" sequenceNo="6"/>
+  </wire>
+  <wire pin1="motor-pos-fb" pin2="motor-pos-cmd" signal="Xpos" componentInstance1="axis.0" componentInstance2="axis.0">
+   <point x="-1448.19" y="502.0199999999998" sequenceNo="1"/>
+   <point x="-1060" y="502.0199999999998" sequenceNo="2"/>
+   <point x="-1060" y="200" sequenceNo="3"/>
+   <point x="-1490" y="200" sequenceNo="4"/>
+   <point x="-1490" y="811.0199999999998" sequenceNo="5"/>
+   <point x="-1133.19" y="811.0199999999998" sequenceNo="6"/>
+  </wire>
+  <wire pin1="motor-pos-cmd" pin2="in" signal="Xpos" componentInstance1="axis.0" componentInstance2="ddt_x">
+   <point x="-1133.19" y="811.0199999999998" sequenceNo="1"/>
+   <point x="-1060" y="811.0199999999998" sequenceNo="2"/>
+   <point x="-1060" y="-141.0857864376269" sequenceNo="3"/>
+   <point x="-223.4939033455901" y="-141.0857864376269" sequenceNo="4"/>
+  </wire>
+  <wire pin1="Home.in" pin2="home-all" signal="home-all" componentInstance1="hidcomp.0" componentInstance2="halui">
+   <point x="-233.5" y="-705.4999999999999" sequenceNo="1"/>
+   <point x="-182.5" y="-705.4999999999999" sequenceNo="2"/>
+   <point x="-182.5" y="68.5" sequenceNo="3"/>
+   <point x="-132.5" y="68.5" sequenceNo="4"/>
+  </wire>
+  <wire pin1="motor-pos-fb" pin2="motor-pos-cmd" signal="Ypos" componentInstance1="axis.1" componentInstance2="axis.1">
+   <point x="-1012.19" y="500.0199999999998" sequenceNo="1"/>
+   <point x="-660" y="500.0199999999998" sequenceNo="2"/>
+   <point x="-660" y="260" sequenceNo="3"/>
+   <point x="-1040" y="260" sequenceNo="4"/>
+   <point x="-1040" y="809.0199999999998" sequenceNo="5"/>
+   <point x="-697.1899999999998" y="809.0199999999998" sequenceNo="6"/>
+  </wire>
+  <wire pin1="motor-pos-cmd" pin2="in" signal="Ypos" componentInstance1="axis.1" componentInstance2="ddt_y">
+   <point x="-697.1899999999998" y="809.0199999999998" sequenceNo="1"/>
+   <point x="-660" y="809.0199999999998" sequenceNo="2"/>
+   <point x="-660" y="27.73611075682071" sequenceNo="3"/>
+   <point x="-642.8929650063131" y="27.73611075682071" sequenceNo="4"/>
+  </wire>
+ </wires>
+ <hints/>
+</visualHalLayout>
