@@ -2,7 +2,6 @@ loadusr -Wn hidcomp /home/frankt/git/hidcomp/hidcomp/release/hidcomp -i robotarm
 
 loadrt logic names=and5 personality=262
 loadrt pwmgen output_type=0
-loadrt not count=2
 loadrt timedelay
 loadrt mux2 count=7
 loadrt edge
@@ -34,12 +33,12 @@ net joy-a-jog mux2.3.out => halui.joint.3.analog
 net joy-b-jog mux2.4.out => halui.joint.4.analog
 net joy-c-jog mux2.5.out => halui.joint.5.analog
 
-net joy-x-jog => halui.axis.z.analog
+net joy-x-jog => halui.axis.x.analog
 net joy-y-jog => halui.axis.y.analog
-net joy-z-jog => halui.axis.x.analog
+net joy-z-jog => halui.axis.z.analog
 net joy-a-jog => halui.axis.a.analog
-net joy-b-jog => halui.axis.c.analog
-net joy-c-jog => halui.axis.b.analog
+net joy-b-jog => halui.axis.b.analog
+net joy-c-jog => halui.axis.c.analog
 
 setp scale.0.in [JOINT_0]MAX_VELOCITY
 setp scale.0.gain 60
@@ -92,9 +91,7 @@ setp edge.0.out-width-ns 100000000
 
 
 addf and5 servo-thread
-addf not.0 servo-thread
-addf not.1 servo-thread
-addf pwmgen.make-pulses servo-thread
+ddf pwmgen.make-pulses servo-thread
 addf pwmgen.update servo-thread
 addf timedelay.0 servo-thread
 addf mux2.0 servo-thread

@@ -1,0 +1,7 @@
+o<recordpoint> sub
+    (LOGAPPEND,points.txt)
+    (LOG, G1 X#5420 Y#5421 Z#5422 A#5423 B#5424 C#5425 )
+    (LOGCLOSE)
+o<recordpoint> endsub
+M2
+

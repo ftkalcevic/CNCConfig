@@ -42,6 +42,7 @@ loadrt estop_latch
 
 loadrt differential names=diffElbow,diffWrist
 
+loadrt not count=3
 # ################################################
 # THREADS
 # ################################################
@@ -54,6 +55,9 @@ addf hm2_[HOSTMOT2](BOARD).0.write        servo-thread
 addf estop-latch.0                        servo-thread
 addf diffElbow                            servo-thread 
 addf diffWrist                            servo-thread 
+addf not.0 servo-thread
+addf not.1 servo-thread
+addf not.2 servo-thread
 
 # ######################################################
 # Axis-of-motion Specific Configs (not the GUI)
@@ -94,6 +98,9 @@ setp hm2_[HOSTMOT2](BOARD).0.stepgen.03.maxaccel        [JOINT_0]STEPGEN_MAX_ACC
 
 setp hm2_[HOSTMOT2](BOARD).0.stepgen.03.step_type       0
 
+# Limit switch
+setp hm2_[HOSTMOT2](BOARD).0.gpio.068.is_opendrain 1
+net limit.0 joint.0.home-sw-in <= hm2_[HOSTMOT2](BOARD).0.gpio.068.in_not
 
 # ################
 # Shoulder Joint [1]
@@ -130,6 +137,11 @@ setp hm2_[HOSTMOT2](BOARD).0.stepgen.00.maxaccel        [JOINT_1]STEPGEN_MAX_ACC
 setp hm2_[HOSTMOT2](BOARD).0.stepgen.00.step_type       0
 
 
+# Limit switch
+setp hm2_[HOSTMOT2](BOARD).0.gpio.050.is_opendrain 1
+net limit.1 joint.1.home-sw-in <= hm2_[HOSTMOT2](BOARD).0.gpio.050.in_not
+
+
 # ################
 # elbow A Joint [2]
 # This goes through the differential with joint 3 (see scorbot config)
@@ -163,6 +175,10 @@ setp hm2_[HOSTMOT2](BOARD).0.stepgen.01.maxvel          [JOINT_2]STEPGEN_MAX_VEL
 setp hm2_[HOSTMOT2](BOARD).0.stepgen.01.maxaccel        [JOINT_2]STEPGEN_MAX_ACC
 
 setp hm2_[HOSTMOT2](BOARD).0.stepgen.01.step_type       0
+
+# Limit switch
+setp hm2_[HOSTMOT2](BOARD).0.gpio.056.is_opendrain 1
+net limit.2 joint.2.home-sw-in <= hm2_[HOSTMOT2](BOARD).0.gpio.056.in
 
 
 # ################
@@ -198,6 +214,11 @@ setp hm2_[HOSTMOT2](BOARD).0.stepgen.02.maxvel          [JOINT_3]STEPGEN_MAX_VEL
 setp hm2_[HOSTMOT2](BOARD).0.stepgen.02.maxaccel        [JOINT_3]STEPGEN_MAX_ACC
 
 setp hm2_[HOSTMOT2](BOARD).0.stepgen.02.step_type       0
+
+
+# Limit switch
+setp hm2_[HOSTMOT2](BOARD).0.gpio.062.is_opendrain 1
+net limit.3 joint.3.home-sw-in <= hm2_[HOSTMOT2](BOARD).0.gpio.062.in_not
 
 
 
@@ -242,11 +263,12 @@ net tool-change-loop iocontrol.0.tool-change => iocontrol.0.tool-changed
 
 
 # dynamixel servos
-loadusr -Wn dynamixelcomp /home/frankt/git/dynamixel/dynamixelcomp/dynamixelcomp baud=3000000 device=/dev/ttyUSB0 ids=2,3
+loadusr -Wn dynamixelcomp /home/frankt/git/dynamixel/dynamixelcomp/dynamixelcomp baud=3000000 device=/dev/ttyUSB0 ids=2,3,4
 
-loadrt pid num_chan=2 
+loadrt pid num_chan=3 
 addf pid.0.do-pid-calcs servo-thread
 addf pid.1.do-pid-calcs servo-thread
+addf pid.2.do-pid-calcs servo-thread
 
 net joint4-enable joint.4.amp-enable-out => pid.0.enable dynamixelcomp.2.enable
 
@@ -255,12 +277,13 @@ net wrist.pitch-cmd  joint.4.motor-pos-cmd => diffWrist.pitch-cmd
 net wrist.pitch-fb   joint.4.motor-pos-fb <= diffWrist.pitch-fb
 
 net joint4.cmd diffWrist.motor0-cmd => pid.0.command 
-net joint4-out pid.0.output => dynamixelcomp.2.velocity
-net joint4 dynamixelcomp.2.position => diffWrist.motor0-fb pid.0.feedback
+net joint4-out pid.0.output => dynamixelcomp.2.velocity-cmd
+net joint4 dynamixelcomp.2.position-fb => diffWrist.motor0-fb pid.0.feedback
 
 
 
-setp dynamixelcomp.2.scale [JOINT_4]INPUT_SCALE
+setp dynamixelcomp.2.input-scale [JOINT_4]INPUT_SCALE
+setp dynamixelcomp.2.output-scale [JOINT_4]OUTPUT_SCALE
 setp pid.0.maxoutput [JOINT_4]MAX_OUTPUT
 setp pid.0.Pgain [JOINT_4]PGAIN
 setp pid.0.Igain [JOINT_4]IGAIN
@@ -276,15 +299,17 @@ setp pid.0.deadband [JOINT_4]DEADBAND
 net joint5-enable joint.5.amp-enable-out => pid.1.enable dynamixelcomp.3.enable
 
 # position command and feedback
+setp diffWrist.roll-reverse 1
 net wrist.roll-cmd  joint.5.motor-pos-cmd => diffWrist.roll-cmd
 net wrist.roll-fb   joint.5.motor-pos-fb <= diffWrist.roll-fb
 
 net joint5.cmd diffWrist.motor1-cmd => pid.1.command 
-net joint5-out pid.1.output => dynamixelcomp.3.velocity
-net joint5 dynamixelcomp.3.position => diffWrist.motor1-fb pid.1.feedback
+net joint5-out pid.1.output => dynamixelcomp.3.velocity-cmd
+net joint5 dynamixelcomp.3.position-fb => diffWrist.motor1-fb pid.1.feedback
 
 
-setp dynamixelcomp.3.scale [JOINT_5]INPUT_SCALE
+setp dynamixelcomp.3.input-scale [JOINT_5]INPUT_SCALE
+setp dynamixelcomp.3.output-scale [JOINT_5]OUTPUT_SCALE
 setp pid.1.maxoutput [JOINT_5]MAX_OUTPUT
 setp pid.1.Pgain [JOINT_5]PGAIN
 setp pid.1.Igain [JOINT_5]IGAIN
@@ -297,4 +322,32 @@ setp pid.1.FF2 [JOINT_5]FF2
 setp pid.1.deadband [JOINT_5]DEADBAND
 
 
+# ################
+# Gripper Joint[6]
+# ################
 
+
+net joint6-enable joint.6.amp-enable-out => pid.2.enable dynamixelcomp.4.enable
+
+# position command and feedback
+net gripper-cmd  joint.6.motor-pos-cmd => pid.2.command 
+net joint6-out pid.2.output => dynamixelcomp.4.velocity-cmd
+net gripper-fb   joint.6.motor-pos-fb <= dynamixelcomp.4.position-fb pid.2.feedback
+
+
+setp dynamixelcomp.4.input-scale [JOINT_6]INPUT_SCALE
+setp dynamixelcomp.4.output-scale [JOINT_6]OUTPUT_SCALE
+setp pid.2.maxoutput [JOINT_6]MAX_OUTPUT
+setp pid.2.Pgain [JOINT_6]PGAIN
+setp pid.2.Igain [JOINT_6]IGAIN
+setp pid.2.Dgain [JOINT_6]DGAIN
+setp pid.2.bias [JOINT_6]BIAS
+setp pid.2.FF0 [JOINT_6]FF0
+setp pid.2.FF1 [JOINT_6]FF1
+setp pid.2.FF2 [JOINT_6]FF2
+# deadband should be just over 1 count
+setp pid.2.deadband [JOINT_6]DEADBAND
+
+
+
+net is-teleop-mode motion.teleop-mode => ikfastkins.teleop-mode
