@@ -265,6 +265,9 @@ net tool-change-loop iocontrol.0.tool-change => iocontrol.0.tool-changed
 # dynamixel servos
 loadusr -Wn dynamixelcomp /home/frankt/git/dynamixel/dynamixelcomp/dynamixelcomp baud=3000000 device=/dev/ttyUSB0 ids=2,3,4
 
+loadrt gripper
+addf gripper.0 servo-thread
+
 loadrt pid num_chan=3 
 addf pid.0.do-pid-calcs servo-thread
 addf pid.1.do-pid-calcs servo-thread
@@ -284,6 +287,7 @@ net joint4 dynamixelcomp.2.position-fb => diffWrist.motor0-fb pid.0.feedback
 
 setp dynamixelcomp.2.input-scale [JOINT_4]INPUT_SCALE
 setp dynamixelcomp.2.output-scale [JOINT_4]OUTPUT_SCALE
+setp dynamixelcomp.2.mode 1 # wheel mode
 setp pid.0.maxoutput [JOINT_4]MAX_OUTPUT
 setp pid.0.Pgain [JOINT_4]PGAIN
 setp pid.0.Igain [JOINT_4]IGAIN
@@ -310,6 +314,7 @@ net joint5 dynamixelcomp.3.position-fb => diffWrist.motor1-fb pid.1.feedback
 
 setp dynamixelcomp.3.input-scale [JOINT_5]INPUT_SCALE
 setp dynamixelcomp.3.output-scale [JOINT_5]OUTPUT_SCALE
+setp dynamixelcomp.3.mode 1 # wheel mode
 setp pid.1.maxoutput [JOINT_5]MAX_OUTPUT
 setp pid.1.Pgain [JOINT_5]PGAIN
 setp pid.1.Igain [JOINT_5]IGAIN
@@ -330,13 +335,16 @@ setp pid.1.deadband [JOINT_5]DEADBAND
 net joint6-enable joint.6.amp-enable-out => pid.2.enable dynamixelcomp.4.enable
 
 # position command and feedback
-net gripper-cmd  joint.6.motor-pos-cmd => pid.2.command 
-net joint6-out pid.2.output => dynamixelcomp.4.velocity-cmd
-net gripper-fb   joint.6.motor-pos-fb <= dynamixelcomp.4.position-fb pid.2.feedback
+#net gripper-cmd  joint.6.motor-pos-cmd => pid.2.command 
+#net joint6-out pid.2.output => dynamixelcomp.4.velocity-cmd
+#net gripper-fb   joint.6.motor-pos-fb <= dynamixelcomp.4.position-fb pid.2.feedback
 
 
 setp dynamixelcomp.4.input-scale [JOINT_6]INPUT_SCALE
 setp dynamixelcomp.4.output-scale [JOINT_6]OUTPUT_SCALE
+setp dynamixelcomp.4.mode 0 # position mode
+setp dynamixelcomp.4.cw-limit 400
+setp dynamixelcomp.4.ccw-limit 260
 setp pid.2.maxoutput [JOINT_6]MAX_OUTPUT
 setp pid.2.Pgain [JOINT_6]PGAIN
 setp pid.2.Igain [JOINT_6]IGAIN
@@ -348,6 +356,25 @@ setp pid.2.FF2 [JOINT_6]FF2
 # deadband should be just over 1 count
 setp pid.2.deadband [JOINT_6]DEADBAND
 
+#pin in bit closed "closed = true, open = false";
+#pin in bit tip "true = return tip offset, false = return palm offset";
+#pin in float torque "grip force";
 
+setp gripper.0.open-position-cmd 300
+setp gripper.0.close-position-cmd 2300
+setp gripper.0.open-offset 41.5
+setp gripper.0.close-offset 48.25
+setp gripper.0.palm-offset 0
+setp gripper.0.move-speed  0.05
+
+net gripper-position-cmd gripper.0.position-cmd => dynamixelcomp.4.position-cmd
+net gripper-position-fb gripper.0.position-fb <= dynamixelcomp.4.raw-position-fb
+net gripper-offset gripper.0.position-offset => ikfastkins.gripper-offset
+
+
+# Gripper object
+#   open/closed
+#   tip or palm
+#   torque
 
 net is-teleop-mode motion.teleop-mode => ikfastkins.teleop-mode

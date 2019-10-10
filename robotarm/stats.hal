@@ -14,6 +14,14 @@ net stats.2 uiStats.2 <= joint.2.pos-cmd
 net stats.3 uiStats.3 <= joint.3.pos-cmd
 net stats.4 uiStats.4 <= joint.4.pos-cmd
 net stats.5 uiStats.5 <= joint.5.pos-cmd
+net gripper-offset <= uiStats.6 
+
+net stats.0 => uiStats.joint-range.0
+net stats.1 => uiStats.joint-range.1
+net stats.2 => uiStats.joint-range.2
+net stats.3 => uiStats.joint-range.3
+net stats.4 => uiStats.joint-range.4
+net stats.5 => uiStats.joint-range.5
 
 net stats.0.homed uiStats.0.homed <= joint.0.homed
 net stats.1.homed uiStats.1.homed <= joint.1.homed
@@ -25,3 +33,7 @@ net stats.5.homed uiStats.5.homed <= joint.5.homed
 net is-teleop-mode => uiStats.axis-table
 net is-teleop-mode => not.2.in
 net is-joint-mode not.2.out => uiStats.joint-table
+
+net tip uiStats.btnTip => gripper.0.tip
+net close uiStats.btnGrasp => gripper.0.closed
+net torque uiStats.scaleTorque => dynamixelcomp.4.torque-limit
