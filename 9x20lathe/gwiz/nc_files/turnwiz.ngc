@@ -1,4 +1,4 @@
-O<turn> sub (outside diameter turning)
+O<turnwiz> sub (outside diameter turning)
     #<startX> = #1
     #<endX> = #2
     #<startZ> = #3
@@ -71,7 +71,7 @@ O<turn> sub (outside diameter turning)
 
     (return to start position)
     G30
-O<turn> endsub
+O<turnwiz> endsub
 
 
 o<turn_do_pass> sub
