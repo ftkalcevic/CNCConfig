@@ -303,6 +303,7 @@ class UintConfig:
         self.spin.set_range(0, 100000)
         self.spin.set_increments(1, 10)
         self.spin.set_value( float(self.defaultValue) )
+        self.spin.connect("button-press-event",self.on_calc_click,self.name,self.spin)
         hbox.pack_start(self.spin)
 
         #btn = gtk.Button()

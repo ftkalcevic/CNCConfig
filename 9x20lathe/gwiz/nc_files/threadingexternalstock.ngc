@@ -64,7 +64,7 @@ O<ThreadingExternalStock_DoMetric> sub
     #<minorDiameter> = [ #<majorDiameter> - 2 * #<pitch> ]
     #<driveLine> = [ #<majorDiameter> + 2 * #<pitch> ]
     #<threadPeak> = [-2 * #<pitch>]
-    #<threadDepth> = [2 * #<pitch>]
+    #<threadDepth> = [2 * 0.86 * #<pitch>]
 
     o10 if [ #<initialCutDepth> LE 0 ]
         !Error - Invalid initialCutDepth.  Must be > 0)
