@@ -34,6 +34,6 @@ net is-teleop-mode => uiStats.axis-table
 net is-teleop-mode => not.2.in
 net is-joint-mode not.2.out => uiStats.joint-table
 
-net tip uiStats.btnTip => gripper.0.tip
-net close uiStats.btnGrasp => gripper.0.closed
-net torque uiStats.scaleTorque => dynamixelcomp.4.torque-limit
+#net tip uiStats.btnTip => gripper.0.tip
+#net close uiStats.btnGrasp => gripper.0.closed
+#net torque uiStats.scaleTorque => dynamixelcomp.4.torque-limit

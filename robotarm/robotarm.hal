@@ -370,7 +370,7 @@ setp gripper.0.move-speed  0.05
 net gripper-position-cmd gripper.0.position-cmd => dynamixelcomp.4.position-cmd
 net gripper-position-fb gripper.0.position-fb <= dynamixelcomp.4.raw-position-fb
 net gripper-offset gripper.0.position-offset => ikfastkins.gripper-offset
-
+net gripper-torque-out gripper.0.torque-out => dynamixelcomp.4.torque-limit
 
 # Gripper object
 #   open/closed

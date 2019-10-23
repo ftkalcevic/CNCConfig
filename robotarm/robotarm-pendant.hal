@@ -91,7 +91,7 @@ setp edge.0.out-width-ns 100000000
 
 
 addf and5 servo-thread
-ddf pwmgen.make-pulses servo-thread
+addf pwmgen.make-pulses servo-thread
 addf pwmgen.update servo-thread
 addf timedelay.0 servo-thread
 addf mux2.0 servo-thread
@@ -104,3 +104,7 @@ addf mux2.6 servo-thread
 addf edge.0 servo-thread
 addf conv-float-s32.0 servo-thread
 addf scale.0 servo-thread
+
+# Gripper
+net torque hidcomp.0.Gripper.fvalue => gripper.0.torque-in
+net tip hidcomp.0.GripperTip.in => gripper.0.tip
