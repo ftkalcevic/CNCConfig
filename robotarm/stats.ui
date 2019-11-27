@@ -815,8 +815,8 @@
                         <property name="bg_color">#ffffffffffff</property>
                         <property name="label">Elbow Tilt</property>
                         <property name="majorscale">30</property>
-                        <property name="max">120</property>
-                        <property name="min">-120</property>
+                        <property name="max">125</property>
+                        <property name="min">-125</property>
                         <property name="minorscale">5</property>
                         <property name="text_template">%0.1f</property>
                         <property name="z0_border">-110</property>
@@ -836,14 +836,14 @@
                         <property name="can_focus">False</property>
                         <property name="bg_color">#ffffffffffff</property>
                         <property name="label">Elbow Rotate</property>
-                        <property name="majorscale">30</property>
-                        <property name="max">180</property>
-                        <property name="min">-180</property>
+                        <property name="majorscale">45</property>
+                        <property name="max">540</property>
+                        <property name="min">-540</property>
                         <property name="minorscale">5</property>
                         <property name="text_template">%0.1f</property>
-                        <property name="z0_border">-170</property>
+                        <property name="z0_border">-510</property>
                         <property name="z0_color">#ffff00000000</property>
-                        <property name="z1_border">170</property>
+                        <property name="z1_border">510</property>
                         <property name="z1_color">#ffffffff0000</property>
                         <property name="z2_color">#ffff00000000</property>
                       </object>
@@ -859,13 +859,13 @@
                         <property name="bg_color">#ffffffffffff</property>
                         <property name="label">Wrist Tilt</property>
                         <property name="majorscale">30</property>
-                        <property name="max">90</property>
-                        <property name="min">-90</property>
+                        <property name="max">135</property>
+                        <property name="min">-135</property>
                         <property name="minorscale">5</property>
                         <property name="text_template">%0.1f</property>
-                        <property name="z0_border">-80</property>
+                        <property name="z0_border">-125</property>
                         <property name="z0_color">#ffff00000000</property>
-                        <property name="z1_border">80</property>
+                        <property name="z1_border">125</property>
                         <property name="z1_color">#ffffffff0000</property>
                         <property name="z2_color">#ffff00000000</property>
                       </object>
@@ -882,14 +882,14 @@
                         <property name="can_focus">False</property>
                         <property name="bg_color">#ffffffffffff</property>
                         <property name="label">Wrist Rotate</property>
-                        <property name="majorscale">30</property>
-                        <property name="max">90</property>
-                        <property name="min">-90</property>
+                        <property name="majorscale">45</property>
+                        <property name="max">540</property>
+                        <property name="min">-540</property>
                         <property name="minorscale">5</property>
                         <property name="text_template">%0.1f</property>
-                        <property name="z0_border">-80</property>
+                        <property name="z0_border">-510</property>
                         <property name="z0_color">#ffff00000000</property>
-                        <property name="z1_border">80</property>
+                        <property name="z1_border">510</property>
                         <property name="z1_color">#ffffffff0000</property>
                         <property name="z2_color">#ffff00000000</property>
                       </object>
