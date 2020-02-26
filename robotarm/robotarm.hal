@@ -279,10 +279,11 @@ net joint4-enable joint.4.amp-enable-out => pid.0.enable dynamixelcomp.2.enable
 net wrist.pitch-cmd  joint.4.motor-pos-cmd => diffWrist.pitch-cmd
 net wrist.pitch-fb   joint.4.motor-pos-fb <= diffWrist.pitch-fb
 
-net joint4.cmd diffWrist.motor0-cmd => pid.0.command 
+net joint4.cmd diffWrist.motor1-cmd => pid.0.command 
 net joint4-out pid.0.output => dynamixelcomp.2.velocity-cmd
-net joint4 dynamixelcomp.2.position-fb => diffWrist.motor0-fb pid.0.feedback
+net joint4 dynamixelcomp.2.position-fb => diffWrist.motor1-fb pid.0.feedback
 
+net limit.4 joint.4.home-sw-in <= hm2_[HOSTMOT2](BOARD).0.gpio.071.in
 
 
 setp dynamixelcomp.2.input-scale [JOINT_4]INPUT_SCALE
@@ -307,10 +308,11 @@ setp diffWrist.roll-reverse 1
 net wrist.roll-cmd  joint.5.motor-pos-cmd => diffWrist.roll-cmd
 net wrist.roll-fb   joint.5.motor-pos-fb <= diffWrist.roll-fb
 
-net joint5.cmd diffWrist.motor1-cmd => pid.1.command 
+net joint5.cmd diffWrist.motor0-cmd => pid.1.command 
 net joint5-out pid.1.output => dynamixelcomp.3.velocity-cmd
-net joint5 dynamixelcomp.3.position-fb => diffWrist.motor1-fb pid.1.feedback
+net joint5 dynamixelcomp.3.position-fb => diffWrist.motor0-fb pid.1.feedback
 
+net limit.5 joint.5.home-sw-in <= hm2_[HOSTMOT2](BOARD).0.gpio.069.in_not
 
 setp dynamixelcomp.3.input-scale [JOINT_5]INPUT_SCALE
 setp dynamixelcomp.3.output-scale [JOINT_5]OUTPUT_SCALE
@@ -370,7 +372,7 @@ setp gripper.0.move-speed  0.05
 net gripper-position-cmd gripper.0.position-cmd => dynamixelcomp.4.position-cmd
 net gripper-position-fb gripper.0.position-fb <= dynamixelcomp.4.raw-position-fb
 net gripper-offset gripper.0.position-offset => ikfastkins.gripper-offset
-
+net gripper-torque-out gripper.0.torque-out => dynamixelcomp.4.torque-limit
 
 # Gripper object
 #   open/closed
