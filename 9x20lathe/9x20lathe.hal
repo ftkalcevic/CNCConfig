@@ -162,7 +162,7 @@ net spindle_index_en hm2_[HOSTMOT2](BOARD).0.encoder.02.index-enable  enc-idx-di
 net spindle_div_idx_en enc-idx-div.0.index-enable  spindle.0.index-enable
 
 
-loadrt scale
+loadrt scale count=2
 addf scale.0 servo-thread
 setp scale.0.gain 60
 loadrt lowpass

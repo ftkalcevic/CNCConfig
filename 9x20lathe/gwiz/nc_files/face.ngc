@@ -4,11 +4,17 @@ O<face> sub (outside facing on the lathe)
     #<stepZ> = #3
     #<feed> = #4
     #<sfm> = #5
+    #<rpm> = #6
     
     #<maxrpm> = 1200
     #<clearance> = 2
 
     (verify parameters)
+    o6 if [#<sfm> NE 0 and #<rpm> NE 0 ]
+        (msg, Both SFM and RPM set.  Choose one.)
+        M2
+    o6 endif
+
 
     (Make sure spindle is on)
     S10
@@ -25,13 +31,17 @@ O<face> sub (outside facing on the lathe)
     G0 Z#<zFinish> 
 
     (CSS mode)
-    #<mpm> = [#<sfm> * 12 * 25.4/1000]
-    G96 D#<maxrpm> S#<mpm>
+    o20 if [ #<sfm> NE 0 ]
+        #<mpm> = [#<sfm> * 12 * 25.4/1000]
+        G96 D#<maxrpm> S#<mpm>
+    o20 else
+        G97 S#<rpm>
+    o20 endif
 
     (cut)
     G33 X#<endX> K#<feed>
 
-    (rpm mode)
+    (default back to rpm mode)
     G97
 
     (retract ready for another cut)

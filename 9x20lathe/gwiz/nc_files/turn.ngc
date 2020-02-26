@@ -4,14 +4,20 @@ O<turn> sub (outside diameter turning)
     #<feedZ> = #3
     #<stepX> = #4
     #<sfm> = #5
+    #<rpm> = #6
 
-    #<max_rpm> = 1200
+    #<maxrpm> = 1200
     #<clearance> = 2
 
     (verify parameters)
     o5 if [ #<endZ> GT #<startZ> ]
-        ! endZ coordinate must be less than or equal to startZ
+        (msg, endZ coordinate must be less than or equal to startZ)
+        M2
     o5 endif
+    o6 if [#<sfm> NE 0 and #<rpm> NE 0 ]
+        (msg, Both SFM and RPM set.  Choose one.)
+        M2
+    o6 endif
 
     (start/end dia)
     #<xPos> = #5420
@@ -33,11 +39,22 @@ O<turn> sub (outside diameter turning)
     G0 X[#<xFinish>]
 
     (CSS mode)
-    #<mpm> = [#<sfm> * 12 * 25.4/1000]
-    G96 D#<max_rpm> S#<mpm>
+    o20 if [ #<sfm> NE 0 ]
+        #<mpm> = [#<sfm> * 12 * 25.4/1000]
+        #<css_rpm> = [ [#<mpm> * 1000 ] / [#<xPos> * 3.14159 * 2 ] ]
+        #<dwell> = [4*[1/[#<css_rpm>/60]] ]
+        G96 D#<maxrpm> S#<mpm>
+    o20 else
+        #<dwell> = [4*[1/[#<rpm>/60]] ]
+        G97 S#<rpm>
+    o20 endif
+
 
     (cut)
     G33 Z#<endZ> K#<feedZ>
+
+    ( Dwell for 2 revolutions) 
+    G4 P[#<dwell>] 
 
     (retract)
     G0 X[#<xFinish>+#<clearance>] Z[#<endZ>+#<clearance>]

@@ -6,4 +6,33 @@ export EMCPATH=/home/frankt/linuxcnc-dev
 
 . $EMCPATH/scripts/rip-environment
 #rm /home/frankt/emc2/9x20lathe/9x20lathe.var
-$EMCPATH/scripts/linuxcnc /home/frankt/linuxcnc/9x20lathe/9x20lathe-touchy.ini
+
+while true; do
+
+    date 2>&1 >>  ~/linuxcnc.log
+    echo "starting linuxcnc" 2>&1 >> ~/linuxcnc.log
+    whoami 2>&1 >> ~/linuxcnc.log
+
+    $EMCPATH/scripts/linuxcnc /home/frankt/linuxcnc/9x20lathe/9x20lathe-touchy.ini >> ~/linuxcnc.log
+#    $EMCPATH/scripts/linuxcnc /home/frankt/linuxcnc/9x20lathe/9x20lathe-touchy.ini 2>&1 >> ~/linuxcnc.log
+
+    case $? in
+        0) 
+            # Exit
+            echo "Exiting LinuxCNC" 2>&1 >> ~/linuxcnc.log
+            break;
+            ;;
+        1)
+            # Restart
+            echo "Restarting LinuxCNC" 2>&1 >> ~/linuxcnc.log
+            ;;
+        2) 
+            # Shutdown
+            echo "Shutting down computer" 2>&1 >> ~/linuxcnc.log
+            ./doShutdown
+            break;
+            ;;
+    esac
+
+done
+

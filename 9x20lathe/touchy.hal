@@ -31,14 +31,21 @@ net ispaused => hidcomp.0.Pause-Light.out
 net joginc touchy.jog.wheel.increment 
 net joginc => joint.0.jog-scale
 net joginc => joint.1.jog-scale
+net joginc => axis.x.jog-scale
+net joginc => axis.z.jog-scale
+
 
 net enjogx touchy.jog.wheel.x => joint.0.jog-enable
 net enjogz touchy.jog.wheel.z => joint.1.jog-enable
+net enjogx touchy.jog.wheel.x => axis.x.jog-enable
+net enjogz touchy.jog.wheel.z => axis.z.jog-enable
 
 net jog-wheel-count hidcomp.0.Dial.count
 net jog-wheel-count joint.0.jog-counts
 net jog-wheel-count joint.1.jog-counts
 net jog-wheel-count touchy.wheel-counts
+net jog-wheel-count axis.x.jog-counts
+net jog-wheel-count axis.z.jog-counts
 
 # pendant heartbeat
 loadrt watchdog2

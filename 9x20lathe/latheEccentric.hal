@@ -1,0 +1,34 @@
+net estop-link => gladevcpEccentric.hbox1 gladevcpEccentric.hal_table1  gladevcpEccentric.hal_table2  gladevcpEccentric.hal_table3  gladevcpEccentric.hal_table4  gladevcpEccentric.hal_table5 
+
+net P:limited gladevcpEccentric.offset-limit <= motion.eoffset-limited
+net P:paused  gladevcpEccentric.paused <= halui.program.is-paused
+net E:fnum    gladevcpEccentric.f-num-s => xo.fnum
+net E:rfraction gladevcpEccentric.r-fract-f => xo.rfraction
+net E:fmult     gladevcpEccentric.f-mult-f => xo.fmult
+net E:start-angle gladevcpEccentric.angle-start-f => xo.start-angle
+net E:eccentric-offset gladevcpEccentric.ecc-offset-f => xo.eccentric-offset 
+net E:state gladevcpEccentric.state <= xo.state-dbg
+
+net E:eoffset-enable => gladevcpEccentric.offset-on
+net E:x-eoffset      => gladevcpEccentric.offset
+net E:radius-ref     => gladevcpEccentric.radius
+net E:is-on         => gladevcpEccentric.offset-active
+
+net E:enable-in      <= gladevcpEccentric.on 
+
+loadrt divide names=div
+addf   div          servo-thread
+setp   div.divisor  360
+
+net E:angle          => div.dividend
+net E:mod_angle     div.remainder => gladevcpEccentric.angle
+
+loadrt position names=pos
+addf pos        servo-thread
+
+net pos0     axis.x.pos-cmd => pos.pos
+net pos1     halui.axis.x.g5x-offset => pos.g5x-offset
+net pos2     halui.axis.x.g92-offset => pos.g92-offset
+net pos3     halui.tool.length_offset.x => pos.tool-offset
+net E:radius-ref     pos.out => xo.radius-ref
+

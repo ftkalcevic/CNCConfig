@@ -397,6 +397,9 @@ class emc_status:
             if self.emcstat.homed[i]: h = "*"
             if am & (1<<i):
                 letter = 'XYZABCUVW'[i]
+                if lathe: 
+                    h = " "
+                    if self.emcstat.homed[i-1]: h = "*"
                 set_text(self.relative[d], fmt % (letter, relp[i]))
                 set_text(self.absolute[d], h + fmt % (letter, p[i]))
                 set_text(self.distance[d], fmt % (letter, dtg[i]))

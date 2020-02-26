@@ -50,13 +50,6 @@ class HandlerClass:
         self.halcomp = halcomp
         self.builder = builder
 
-        img = ImageEx()
-        img.set_from_file( "latheFace.svg" )
-        vbox = builder.get_object("vboxImage")
-        vbox.pack_start(img)
-        vbox.reorder_child(img,0)
-        vbox.show_all()
-
         self.load_defaults()
         self.load_settings()
 
@@ -79,76 +72,34 @@ class HandlerClass:
         
 
     def load_defaults(self):
-        params = (  ( "spinXStart", 15 ),
-                    ( "spinXEnd", -1 ),
-                    ( "spinXFeed", 0.1 ),
-                    ( "spinZStep", 0.25 ),
-                    ( "spinSFM", 100 ),
-                    ( "spinRPM", 0 ) )
+        params = (  ( "angle-start", 0 ),
+                    ( "f-mult", 6 ),
+                    ( "r-fract", 0 ),
+                    ( "ecc-offset", 0 ),
+                    ( "f-num", 4 ) )
         for widget_name,value in params:
             widget = self.builder.get_object(widget_name)
-            widget.set_value( value )
-
-    def DoTouchoff( self,  widget, axis, index ):
-        status = linuxcnc.stat()
-        status.poll()
-
-        pos = status.position[index] - status.g5x_offset[index] - status.tool_offset[index]
-
-        if index == 0:
-            # radius/diameter
-            if not 80 in status.gcodes:
-                pos = pos*2
-
-        dialog = CalculatorDialog()
-        if dialog.run(widget.get_parent(), "Touch off " + axis, str(pos) ):
-            new = float(dialog.get_value())
-            cmd = "G10 L20 P0 %s%s" % (axis,new)
-            ensure_mode(linuxcnc.MODE_MDI)
-            linuxcnc.command().mdi(cmd)
-
-
-    def on_btnTouchOffX_pressed(self,w):
-        self.DoTouchoff( w, "X", 0 )
-
-    def on_btnTouchOffZ_pressed(self,w):
-        self.DoTouchoff( w, "Z", 2 )
-
-
-    def on_btnRun_pressed(self,w):
-        cmd = "O<face> call [%s] [%s] [%s] [%s] [%s] [%s]" % ( 
-                    self.builder.get_object("spinXStart").get_value(),
-                    self.builder.get_object("spinXEnd").get_value(),
-                    self.builder.get_object("spinXFeed").get_value(),
-                    self.builder.get_object("spinZStep").get_value(),
-                    self.builder.get_object("spinSFM").get_value(),
-                    self.builder.get_object("spinRPM").get_value() )
-        print cmd
-        ensure_mode(linuxcnc.MODE_MDI)
-        linuxcnc.command().mdi(cmd)
+            if isinstance(widget,gtk.ComboBox):
+                widget.set_active( value )
+            else:
+                widget.set_value( value )
 
     def DoCalculator(self, spin, desc):
         dialog = CalculatorDialog()
         if dialog.run(spin.get_parent(), desc, str(spin.get_value()) ):
             spin.set_value( float(dialog.get_value()) )
 
-    def on_spinXStart_button_press_event(self,w,d):
-        self.DoCalculator(w, "X Start")
+    def on_anglestart_button_press_event(self,w,d):
+        self.DoCalculator(w, "Start Angle")
 
-    def on_spinXFeed_button_press_event(self,w,d):
-        self.DoCalculator(w, "X Feed")
+    def on_fmult_button_press_event(self,w,d):
+        self.DoCalculator(w, "f-mult")
 
-    def on_spinRPM_button_press_event(self,w,d):
-        self.DoCalculator(w, "RPM")
+    def on_rfract_button_press_event(self,w,d):
+        self.DoCalculator(w, "r-fract")
 
-    def on_spinSFM_button_press_event(self,w,d):
-        self.DoCalculator(w, "SFM")
-
-    def on_spinZStep_button_press_event(self,w,d):
-        self.DoCalculator(w,"Z Step")
-
-    def on_spinXEnd_button_press_event(self,w,d):
-        self.DoCalculator(w,"X End")
+    def on_eccoffset_button_press_event(self,w,d):
+        self.DoCalculator(w,"Eccentric Offset")
 
     def on_btnSpindleStop_toggled(self,w):
         if self.btnSpindleStop.get_active():

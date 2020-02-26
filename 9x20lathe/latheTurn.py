@@ -83,7 +83,8 @@ class HandlerClass:
                     ( "spinZEnd", -10 ),
                     ( "spinZFeed", 0.1 ),
                     ( "spinXStep", 0.25 ),
-                    ( "spinSFM", 100 ) )
+                    ( "spinSFM", 100 ),
+                    ( "spinRPM", 0 ) )
         for widget_name,value in params:
             widget = self.builder.get_object(widget_name)
             widget.set_value( value )
@@ -112,12 +113,13 @@ class HandlerClass:
         self.DoTouchoff( w, "Z", 2 )
 
     def on_btnRun_pressed(self,w):
-        cmd = "O<turn> call [%s] [%s] [%s] [%s] [%s]" % ( 
+        cmd = "O<turn> call [%s] [%s] [%s] [%s] [%s] [%s]" % ( 
                     self.builder.get_object("spinZStart").get_value(),
                     self.builder.get_object("spinZEnd").get_value(),
                     self.builder.get_object("spinZFeed").get_value(),
                     self.builder.get_object("spinXStep").get_value(),
-                    self.builder.get_object("spinSFM").get_value() )
+                    self.builder.get_object("spinSFM").get_value(),
+                    self.builder.get_object("spinRPM").get_value() )
         print cmd
         ensure_mode(linuxcnc.MODE_MDI)
         linuxcnc.command().mdi(cmd)
@@ -135,6 +137,9 @@ class HandlerClass:
 
     def on_spinSFM_button_press_event(self,w,d):
         self.DoCalculator(w,"SFM")
+
+    def on_spinRPM_button_press_event(self,w,d):
+        self.DoCalculator(w,"RPM")
 
     def on_spinXStep_button_press_event(self,w,d):
         self.DoCalculator(w,"X Step")

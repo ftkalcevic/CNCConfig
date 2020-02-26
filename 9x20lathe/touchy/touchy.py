@@ -70,7 +70,9 @@ import hal_interface
 import filechooser
 import listing
 import preferences
+from QuitDialog import QuitDialog
 
+exit_code = 0
 pix_data = '''/* XPM */
 static char * invisible_xpm[] = {
 "1 1 1 1",
@@ -577,17 +579,14 @@ class touchy:
         self.jogsettings_activate(1)
 
     def on_quit(self,b):
-        dialog = gtk.Dialog("Confirm Close",
-             b.get_toplevel(),
-             gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-             (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
-              gtk.STOCK_OK, gtk.RESPONSE_ACCEPT))
-        label = gtk.Label("Do you really want to close LinuxCNC?")
-        dialog.vbox.pack_start(label)
-        label.show()
-        ret = dialog.run()
+        dialog = QuitDialog()
+        dialog.show_all()
+        dialog.run()
+        ret = dialog.get_value()
         dialog.destroy()
-        if ret == gtk.RESPONSE_ACCEPT:
+        if ret >= 0:
+            global exit_code
+            exit_code = ret
             gtk.main_quit()
 
     def toolset_fixture(self, b):
@@ -921,3 +920,7 @@ if __name__ == "__main__":
             res = os.spawnvp(os.P_WAIT, "halcmd", ["halcmd", "-i",inifile,"-f", postgui_halfile])
         if res: raise SystemExit, res
     gtk.main()
+
+
+sys.exit(exit_code)
+

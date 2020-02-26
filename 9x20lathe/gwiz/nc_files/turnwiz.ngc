@@ -9,19 +9,22 @@ O<turnwiz> sub (outside diameter turning)
     #<finishFeed> = #8
     #<finishDepth> = #9
     #<sfm> = #10
-    #<max_rpm> = #11
-    #<clearance> = #12
+    #<rpm> = #11
+    #<max_rpm> = #12
+    #<clearance> = #13
 
     (verify parameters)
     o5 if [ #<endX> GT #<startX> ]
-        ! endX coordinate must be less than or equal to startX
+        (msg, endX coordinate must be less than or equal to startX)
+        M2
     o5 endif
+    o6 if [#<sfm> NE 0 and #<rpm> NE 0 ]
+        (msg, Both SFM and RPM set.  Choose one.)
+        M2
+    o6 endif
 
-    (CSS mode)
-    #<mpm> = [#<sfm> * 12 * 25.4/1000]
-    G96 D#<max_rpm> S#<mpm>
 
-    (Todo - how do we determine plunge speeds from SFM)
+   (Todo - how do we determine plunge speeds from SFM)
     F50
 
     (save start position)
@@ -51,23 +54,35 @@ O<turnwiz> sub (outside diameter turning)
     o12 endif
     #<xFirst> = [[#<xRoughCount>-1] * #<roughDepth> + #<xRoughFinish>]
 
-    (do the loop)
+    (CSS mode)
+    o90 if [ #<sfm> NE 0 ]
+        #<mpm> = [#<sfm> * 12 * 25.4/1000]
+        #<rpm> = [ [#<mpm> * 1000 ] / [#<xFirst> * 3.14159 * 2 ] ]
+        G96 D#<max_rpm> S#<mpm>
+    o90 else
+        G97 S#<rpm>
+    o90 endif
+
+     (do the loop)
     G0 X[#<startX>+#<clearance>]
     G0 Z#<startZ>
     #<xPos> = #<xFirst>
     o20 repeat [ #<xRoughCount> ]
-        o<turn_do_pass> call [#<xPos>] [#<startZ>] [#<endZ>] [#<mpm>] [#<max_rpm>] [#<roughFeed>] [#<clearance>] [#<zClearance>]
+        o<turn_do_pass> call [#<xPos>] [#<startZ>] [#<endZ>] [#<rpm>] [#<max_rpm>] [#<roughFeed>] [#<clearance>] [#<zClearance>]
 	#<xPos> = [#<xPos> - #<roughDepth>]
     o20 endrepeat
 
     #<xPos> = [ #<endX> + #<finishDepth> * [#<xFinishCount>-1] ]
     o30 repeat [ #<xFinishCount> ]
 
-	o<turn_do_pass> call [#<xPos>] [#<startZ>] [#<endZ>] [#<mpm>] [#<max_rpm>] [#<finishFeed>] [#<clearance>] [#<zClearance>]
+	o<turn_do_pass> call [#<xPos>] [#<startZ>] [#<endZ>] [#<rpm>] [#<max_rpm>] [#<finishFeed>] [#<clearance>] [#<zClearance>]
 	#<xPos> = [#<xPos> - #<finishDepth>]
     o30 endrepeat
 
     G0 X[#<startX>+#<clearance>]
+
+    (back to rpm mode)
+    G97
 
     (return to start position)
     G30
@@ -78,30 +93,21 @@ o<turn_do_pass> sub
     #<xPos> = #1
     #<startZ> = #2
     #<endZ> = #3
-    #<mpm> = #4
+    #<rpm> = #4
     #<max_rpm> = #5
     #<FeedRate> = #6
     #<xClearance> = #7
     #<zClearance> = #8
 
-    #<css_rpm> = [ [#<mpm> * 1000 ] / [#<xPos> * 3.14159 ] ]
-
-    o21 if [ #<css_rpm> LT 0 ]
-	#<css_rpm> = [ -1 * #<css_rpm> ]
-    o21 endif
-    o22 if [ #<css_rpm> GT #<max_rpm> ]
-	#<css_rpm> = #<max_rpm>
-    o22 endif
-
-    #<feed> = [ #<FeedRate> * #<css_rpm> ]
+    #<feed> = [ #<FeedRate> * #<rpm> ]
 
     G0 Z#<startZ>
     G1 X#<xPos> F[#<feed>]
     G1 Z#<endZ> F[#<feed>]
   
     ( Dwell to cut a complete revolution) 
-    #<dwell> = [4*[1/[#<css_rpm>/60]] ]
-    G4 P[#<dwell>] 
+    #<dwell> = [1/[#<rpm>/60]]
+    G4 P[2*#<dwell>] 
 
     (Retract)
     G0 Z[#<endZ>+#<zClearance>] X[#<xPos>+#<xClearance>]
